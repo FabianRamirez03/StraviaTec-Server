@@ -12,5 +12,7 @@ namespace ServerStraviaTec.Clases
         public DatosUsuarios (DbContextOptions <DatosUsuarios> options) : base(options) => this.Database.Migrate();
 
         public DbSet<Deportista> Deportista { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Administrador> Administrador { get; set; }
     }
 }

@@ -9,8 +9,8 @@ using ServerStraviaTec.Clases;
 namespace ServerStraviaTec.Migrations
 {
     [DbContext(typeof(DatosUsuarios))]
-    [Migration("20201027070529_MigracionPostfresInicial")]
-    partial class MigracionPostfresInicial
+    [Migration("20201031030647_Deportistas")]
+    partial class Deportistas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

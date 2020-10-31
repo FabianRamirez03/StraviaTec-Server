@@ -9,7 +9,7 @@ namespace ServerStraviaTec.Clases
 {
     public class DatosUsuarios : DbContext
     {
-        public DatosUsuarios (DbContextOptions <DatosUsuarios> options) : base(options) { }
+        public DatosUsuarios (DbContextOptions <DatosUsuarios> options) : base(options) => this.Database.Migrate();
 
         public DbSet<Deportista> Deportista { get; set; }
     }

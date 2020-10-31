@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿ using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ServerStraviaTec.Migrations
 {
-    public partial class MigracionPostfresInicial : Migration
+    public partial class Deportistas : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

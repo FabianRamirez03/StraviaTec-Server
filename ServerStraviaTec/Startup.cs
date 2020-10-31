@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.VisualBasic;
+using Npgsql;
+using NpgsqlTypes;
 using ServerStraviaTec.Clases;
 
 namespace ServerStraviaTec
@@ -23,16 +26,14 @@ namespace ServerStraviaTec
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
 
-            services.AddDbContext<DatosUsuarios>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            InitializeStorage(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +78,11 @@ namespace ServerStraviaTec
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+        }
+        private void InitializeStorage(IServiceCollection services)
+        {
+            string connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<DatosUsuarios>(context => context.UseNpgsql(connectionString));
         }
     }
 }

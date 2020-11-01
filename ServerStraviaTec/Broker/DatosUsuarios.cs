@@ -14,5 +14,7 @@ namespace ServerStraviaTec.Clases
         public DbSet<Deportista> Deportista { get; set; }
 
         public DbSet<ServerStraviaTec.Models.Administrador> Administrador { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Carrera> Carrera { get; set; }
     }
 }

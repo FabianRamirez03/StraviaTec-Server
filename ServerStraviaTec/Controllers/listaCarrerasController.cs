@@ -12,48 +12,48 @@ namespace ServerStraviaTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeportistasController : ControllerBase
+    public class listaCarrerasController : ControllerBase
     {
         private readonly DatosUsuarios _context;
 
-        public DeportistasController(DatosUsuarios context)
+        public listaCarrerasController(DatosUsuarios context)
         {
             _context = context;
         }
 
-        // GET: api/Deportistas
+        // GET: api/listaCarreras
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deportista>>> GetDeportista()
+        public async Task<ActionResult<IEnumerable<listaCarreras>>> GetlistaCarreras()
         {
-            return await _context.Deportista.ToListAsync();
+            return await _context.listaCarreras.ToListAsync();
         }
 
-        // GET: api/Deportistas/5
+        // GET: api/listaCarreras/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Deportista>> GetDeportista(string id)
+        public async Task<ActionResult<listaCarreras>> GetlistaCarreras(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
+            var listaCarreras = await _context.listaCarreras.FindAsync(id);
 
-            if (deportista == null)
+            if (listaCarreras == null)
             {
                 return NotFound();
             }
 
-            return deportista;
+            return listaCarreras;
         }
 
-        // PUT: api/Deportistas/5
+        // PUT: api/listaCarreras/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeportista(string id, Deportista deportista)
+        public async Task<IActionResult> PutlistaCarreras(string id, listaCarreras listaCarreras)
         {
-            if (id != deportista.Usuario)
+            if (id != listaCarreras.idDeportista)
             {
                 return BadRequest();
             }
 
-            _context.Entry(deportista).State = EntityState.Modified;
+            _context.Entry(listaCarreras).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace ServerStraviaTec.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeportistaExists(id))
+                if (!listaCarrerasExists(id))
                 {
                     return NotFound();
                 }
@@ -74,20 +74,20 @@ namespace ServerStraviaTec.Controllers
             return NoContent();
         }
 
-        // POST: api/Deportistas
+        // POST: api/listaCarreras
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Deportista>> PostDeportista(Deportista deportista)
+        public async Task<ActionResult<listaCarreras>> PostlistaCarreras(listaCarreras listaCarreras)
         {
-            _context.Deportista.Add(deportista);
+            _context.listaCarreras.Add(listaCarreras);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DeportistaExists(deportista.Usuario))
+                if (listaCarrerasExists(listaCarreras.idDeportista))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace ServerStraviaTec.Controllers
                 }
             }
 
-            return CreatedAtAction("GetDeportista", new { id = deportista.Usuario }, deportista);
+            return CreatedAtAction("GetlistaCarreras", new { id = listaCarreras.idDeportista }, listaCarreras);
         }
 
-        // DELETE: api/Deportistas/5
+        // DELETE: api/listaCarreras/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Deportista>> DeleteDeportista(string id)
+        public async Task<ActionResult<listaCarreras>> DeletelistaCarreras(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
-            if (deportista == null)
+            var listaCarreras = await _context.listaCarreras.FindAsync(id);
+            if (listaCarreras == null)
             {
                 return NotFound();
             }
 
-            _context.Deportista.Remove(deportista);
+            _context.listaCarreras.Remove(listaCarreras);
             await _context.SaveChangesAsync();
 
-            return deportista;
+            return listaCarreras;
         }
 
-        private bool DeportistaExists(string id)
+        private bool listaCarrerasExists(string id)
         {
-            return _context.Deportista.Any(e => e.Usuario == id);
+            return _context.listaCarreras.Any(e => e.idDeportista == id);
         }
     }
 }

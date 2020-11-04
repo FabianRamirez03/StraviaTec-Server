@@ -12,48 +12,48 @@ namespace ServerStraviaTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeportistasController : ControllerBase
+    public class GruposController : ControllerBase
     {
         private readonly DatosUsuarios _context;
 
-        public DeportistasController(DatosUsuarios context)
+        public GruposController(DatosUsuarios context)
         {
             _context = context;
         }
 
-        // GET: api/Deportistas
+        // GET: api/Grupos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deportista>>> GetDeportista()
+        public async Task<ActionResult<IEnumerable<Grupo>>> GetGrupo()
         {
-            return await _context.Deportista.ToListAsync();
+            return await _context.Grupo.ToListAsync();
         }
 
-        // GET: api/Deportistas/5
+        // GET: api/Grupos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Deportista>> GetDeportista(string id)
+        public async Task<ActionResult<Grupo>> GetGrupo(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
+            var grupo = await _context.Grupo.FindAsync(id);
 
-            if (deportista == null)
+            if (grupo == null)
             {
                 return NotFound();
             }
 
-            return deportista;
+            return grupo;
         }
 
-        // PUT: api/Deportistas/5
+        // PUT: api/Grupos/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeportista(string id, Deportista deportista)
+        public async Task<IActionResult> PutGrupo(string id, Grupo grupo)
         {
-            if (id != deportista.Usuario)
+            if (id != grupo.nombreGrupo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(deportista).State = EntityState.Modified;
+            _context.Entry(grupo).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace ServerStraviaTec.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeportistaExists(id))
+                if (!GrupoExists(id))
                 {
                     return NotFound();
                 }
@@ -74,20 +74,20 @@ namespace ServerStraviaTec.Controllers
             return NoContent();
         }
 
-        // POST: api/Deportistas
+        // POST: api/Grupos
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Deportista>> PostDeportista(Deportista deportista)
+        public async Task<ActionResult<Grupo>> PostGrupo(Grupo grupo)
         {
-            _context.Deportista.Add(deportista);
+            _context.Grupo.Add(grupo);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DeportistaExists(deportista.Usuario))
+                if (GrupoExists(grupo.nombreGrupo))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace ServerStraviaTec.Controllers
                 }
             }
 
-            return CreatedAtAction("GetDeportista", new { id = deportista.Usuario }, deportista);
+            return CreatedAtAction("GetGrupo", new { id = grupo.nombreGrupo }, grupo);
         }
 
-        // DELETE: api/Deportistas/5
+        // DELETE: api/Grupos/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Deportista>> DeleteDeportista(string id)
+        public async Task<ActionResult<Grupo>> DeleteGrupo(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
-            if (deportista == null)
+            var grupo = await _context.Grupo.FindAsync(id);
+            if (grupo == null)
             {
                 return NotFound();
             }
 
-            _context.Deportista.Remove(deportista);
+            _context.Grupo.Remove(grupo);
             await _context.SaveChangesAsync();
 
-            return deportista;
+            return grupo;
         }
 
-        private bool DeportistaExists(string id)
+        private bool GrupoExists(string id)
         {
-            return _context.Deportista.Any(e => e.Usuario == id);
+            return _context.Grupo.Any(e => e.nombreGrupo == id);
         }
     }
 }

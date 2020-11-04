@@ -13,27 +13,38 @@ namespace ServerStraviaTec.Models
         public string privacidad { get; set; }
         public string fecha { get; set; }
         public string categoria { get; set; }
-        public string cuentaBancarias { get; set; }
+        public string cuentaBancaria { get; set; }
         public string listaPatrocinadores { get; set; }
-        public int costo { get; set; }
+        public string recorrido { get; set; }
+        public string tipoActividad { get; set; }
+        public string listaParticipantes { get; set; }
+        public string solicitudAfiliaciones { get; set; }
+        public string reporteCarrera { get; set; }
+        public string costo { get; set; }
         [Key]
-        public int id { get; set; }
+        public string idCarrera { get; set; }
 
         public Carrera()
         {
         }
 
         public Carrera(string NombreCarrera, string privacidadCarrera, string fechaCarrera, string categoriaCarrera,
-            string cuentaCarrera, string patrocinadores, int costoCarrera, int idCarrera)
+            string cuentaCarrera, string patrocinadores, string recorridoCarrera, string costoCarrera, string idDeCarrera, string actividadCarrera,
+            string lisitaParticipantesCarrera, string solicitudesCarrera, string reporteDeCarrera)
         {
             nombre = NombreCarrera;
             privacidad = privacidadCarrera;
             fecha = fechaCarrera;
             categoria = categoriaCarrera;
-            cuentaBancarias = cuentaCarrera;
+            cuentaBancaria = cuentaCarrera;
             listaPatrocinadores = patrocinadores;
+            recorrido = recorridoCarrera;
             costo = costoCarrera;
-            id = idCarrera;
+            tipoActividad = actividadCarrera;
+            listaParticipantes = lisitaParticipantesCarrera;
+            solicitudAfiliaciones = solicitudesCarrera;
+            reporteCarrera = reporteDeCarrera;
+            idCarrera = idDeCarrera;
         }
     }
 }

@@ -12,48 +12,48 @@ namespace ServerStraviaTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeportistasController : ControllerBase
+    public class RetoesController : ControllerBase
     {
         private readonly DatosUsuarios _context;
 
-        public DeportistasController(DatosUsuarios context)
+        public RetoesController(DatosUsuarios context)
         {
             _context = context;
         }
 
-        // GET: api/Deportistas
+        // GET: api/Retoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deportista>>> GetDeportista()
+        public async Task<ActionResult<IEnumerable<Reto>>> GetReto()
         {
-            return await _context.Deportista.ToListAsync();
+            return await _context.Reto.ToListAsync();
         }
 
-        // GET: api/Deportistas/5
+        // GET: api/Retoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Deportista>> GetDeportista(string id)
+        public async Task<ActionResult<Reto>> GetReto(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
+            var reto = await _context.Reto.FindAsync(id);
 
-            if (deportista == null)
+            if (reto == null)
             {
                 return NotFound();
             }
 
-            return deportista;
+            return reto;
         }
 
-        // PUT: api/Deportistas/5
+        // PUT: api/Retoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeportista(string id, Deportista deportista)
+        public async Task<IActionResult> PutReto(string id, Reto reto)
         {
-            if (id != deportista.Usuario)
+            if (id != reto.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(deportista).State = EntityState.Modified;
+            _context.Entry(reto).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace ServerStraviaTec.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeportistaExists(id))
+                if (!RetoExists(id))
                 {
                     return NotFound();
                 }
@@ -74,20 +74,20 @@ namespace ServerStraviaTec.Controllers
             return NoContent();
         }
 
-        // POST: api/Deportistas
+        // POST: api/Retoes
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Deportista>> PostDeportista(Deportista deportista)
+        public async Task<ActionResult<Reto>> PostReto(Reto reto)
         {
-            _context.Deportista.Add(deportista);
+            _context.Reto.Add(reto);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DeportistaExists(deportista.Usuario))
+                if (RetoExists(reto.ID))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace ServerStraviaTec.Controllers
                 }
             }
 
-            return CreatedAtAction("GetDeportista", new { id = deportista.Usuario }, deportista);
+            return CreatedAtAction("GetReto", new { id = reto.ID }, reto);
         }
 
-        // DELETE: api/Deportistas/5
+        // DELETE: api/Retoes/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Deportista>> DeleteDeportista(string id)
+        public async Task<ActionResult<Reto>> DeleteReto(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
-            if (deportista == null)
+            var reto = await _context.Reto.FindAsync(id);
+            if (reto == null)
             {
                 return NotFound();
             }
 
-            _context.Deportista.Remove(deportista);
+            _context.Reto.Remove(reto);
             await _context.SaveChangesAsync();
 
-            return deportista;
+            return reto;
         }
 
-        private bool DeportistaExists(string id)
+        private bool RetoExists(string id)
         {
-            return _context.Deportista.Any(e => e.Usuario == id);
+            return _context.Reto.Any(e => e.ID == id);
         }
     }
 }

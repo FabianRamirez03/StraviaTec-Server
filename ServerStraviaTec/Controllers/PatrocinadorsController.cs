@@ -12,48 +12,48 @@ namespace ServerStraviaTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeportistasController : ControllerBase
+    public class PatrocinadorsController : ControllerBase
     {
         private readonly DatosUsuarios _context;
 
-        public DeportistasController(DatosUsuarios context)
+        public PatrocinadorsController(DatosUsuarios context)
         {
             _context = context;
         }
 
-        // GET: api/Deportistas
+        // GET: api/Patrocinadors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deportista>>> GetDeportista()
+        public async Task<ActionResult<IEnumerable<Patrocinador>>> GetPatrocinador()
         {
-            return await _context.Deportista.ToListAsync();
+            return await _context.Patrocinador.ToListAsync();
         }
 
-        // GET: api/Deportistas/5
+        // GET: api/Patrocinadors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Deportista>> GetDeportista(string id)
+        public async Task<ActionResult<Patrocinador>> GetPatrocinador(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
+            var patrocinador = await _context.Patrocinador.FindAsync(id);
 
-            if (deportista == null)
+            if (patrocinador == null)
             {
                 return NotFound();
             }
 
-            return deportista;
+            return patrocinador;
         }
 
-        // PUT: api/Deportistas/5
+        // PUT: api/Patrocinadors/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeportista(string id, Deportista deportista)
+        public async Task<IActionResult> PutPatrocinador(string id, Patrocinador patrocinador)
         {
-            if (id != deportista.Usuario)
+            if (id != patrocinador.nombreComercio)
             {
                 return BadRequest();
             }
 
-            _context.Entry(deportista).State = EntityState.Modified;
+            _context.Entry(patrocinador).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace ServerStraviaTec.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeportistaExists(id))
+                if (!PatrocinadorExists(id))
                 {
                     return NotFound();
                 }
@@ -74,20 +74,20 @@ namespace ServerStraviaTec.Controllers
             return NoContent();
         }
 
-        // POST: api/Deportistas
+        // POST: api/Patrocinadors
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Deportista>> PostDeportista(Deportista deportista)
+        public async Task<ActionResult<Patrocinador>> PostPatrocinador(Patrocinador patrocinador)
         {
-            _context.Deportista.Add(deportista);
+            _context.Patrocinador.Add(patrocinador);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DeportistaExists(deportista.Usuario))
+                if (PatrocinadorExists(patrocinador.nombreComercio))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace ServerStraviaTec.Controllers
                 }
             }
 
-            return CreatedAtAction("GetDeportista", new { id = deportista.Usuario }, deportista);
+            return CreatedAtAction("GetPatrocinador", new { id = patrocinador.nombreComercio }, patrocinador);
         }
 
-        // DELETE: api/Deportistas/5
+        // DELETE: api/Patrocinadors/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Deportista>> DeleteDeportista(string id)
+        public async Task<ActionResult<Patrocinador>> DeletePatrocinador(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
-            if (deportista == null)
+            var patrocinador = await _context.Patrocinador.FindAsync(id);
+            if (patrocinador == null)
             {
                 return NotFound();
             }
 
-            _context.Deportista.Remove(deportista);
+            _context.Patrocinador.Remove(patrocinador);
             await _context.SaveChangesAsync();
 
-            return deportista;
+            return patrocinador;
         }
 
-        private bool DeportistaExists(string id)
+        private bool PatrocinadorExists(string id)
         {
-            return _context.Deportista.Any(e => e.Usuario == id);
+            return _context.Patrocinador.Any(e => e.nombreComercio == id);
         }
     }
 }

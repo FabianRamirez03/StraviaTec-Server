@@ -16,5 +16,22 @@ namespace ServerStraviaTec.Clases
         public DbSet<ServerStraviaTec.Models.Administrador> Administrador { get; set; }
 
         public DbSet<ServerStraviaTec.Models.Carrera> Carrera { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Grupo> Grupo { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.solicitudAfiliacion> solicitudAfiliacion { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Actividad> Actividad { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Patrocinador> Patrocinador { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.Reto> Reto { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.listaActividad> listaActividad { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.listaCarreras> listaCarreras { get; set; }
+
+        public DbSet<ServerStraviaTec.Models.listaRetos> listaRetos { get; set; }
+
     }
 }

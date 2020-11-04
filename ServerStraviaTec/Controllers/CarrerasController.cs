@@ -30,7 +30,7 @@ namespace ServerStraviaTec.Controllers
 
         // GET: api/Carreras/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Carrera>> GetCarrera(int id)
+        public async Task<ActionResult<Carrera>> GetCarrera(string id)
         {
             var carrera = await _context.Carrera.FindAsync(id);
 
@@ -46,9 +46,9 @@ namespace ServerStraviaTec.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCarrera(int id, Carrera carrera)
+        public async Task<IActionResult> PutCarrera(string id, Carrera carrera)
         {
-            if (id != carrera.id)
+            if (id != carrera.idCarrera)
             {
                 return BadRequest();
             }
@@ -81,14 +81,28 @@ namespace ServerStraviaTec.Controllers
         public async Task<ActionResult<Carrera>> PostCarrera(Carrera carrera)
         {
             _context.Carrera.Add(carrera);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (CarreraExists(carrera.idCarrera))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return CreatedAtAction("GetCarrera", new { id = carrera.id }, carrera);
+            return CreatedAtAction("GetCarrera", new { id = carrera.idCarrera }, carrera);
         }
 
         // DELETE: api/Carreras/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Carrera>> DeleteCarrera(int id)
+        public async Task<ActionResult<Carrera>> DeleteCarrera(string id)
         {
             var carrera = await _context.Carrera.FindAsync(id);
             if (carrera == null)
@@ -102,9 +116,9 @@ namespace ServerStraviaTec.Controllers
             return carrera;
         }
 
-        private bool CarreraExists(int id)
+        private bool CarreraExists(string id)
         {
-            return _context.Carrera.Any(e => e.id == id);
+            return _context.Carrera.Any(e => e.idCarrera == id);
         }
     }
 }

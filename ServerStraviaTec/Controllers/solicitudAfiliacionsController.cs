@@ -12,48 +12,48 @@ namespace ServerStraviaTec.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DeportistasController : ControllerBase
+    public class solicitudAfiliacionsController : ControllerBase
     {
         private readonly DatosUsuarios _context;
 
-        public DeportistasController(DatosUsuarios context)
+        public solicitudAfiliacionsController(DatosUsuarios context)
         {
             _context = context;
         }
 
-        // GET: api/Deportistas
+        // GET: api/solicitudAfiliacions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Deportista>>> GetDeportista()
+        public async Task<ActionResult<IEnumerable<solicitudAfiliacion>>> GetsolicitudAfiliacion()
         {
-            return await _context.Deportista.ToListAsync();
+            return await _context.solicitudAfiliacion.ToListAsync();
         }
 
-        // GET: api/Deportistas/5
+        // GET: api/solicitudAfiliacions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Deportista>> GetDeportista(string id)
+        public async Task<ActionResult<solicitudAfiliacion>> GetsolicitudAfiliacion(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
+            var solicitudAfiliacion = await _context.solicitudAfiliacion.FindAsync(id);
 
-            if (deportista == null)
+            if (solicitudAfiliacion == null)
             {
                 return NotFound();
             }
 
-            return deportista;
+            return solicitudAfiliacion;
         }
 
-        // PUT: api/Deportistas/5
+        // PUT: api/solicitudAfiliacions/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDeportista(string id, Deportista deportista)
+        public async Task<IActionResult> PutsolicitudAfiliacion(string id, solicitudAfiliacion solicitudAfiliacion)
         {
-            if (id != deportista.Usuario)
+            if (id != solicitudAfiliacion.idAfiliacion)
             {
                 return BadRequest();
             }
 
-            _context.Entry(deportista).State = EntityState.Modified;
+            _context.Entry(solicitudAfiliacion).State = EntityState.Modified;
 
             try
             {
@@ -61,7 +61,7 @@ namespace ServerStraviaTec.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeportistaExists(id))
+                if (!solicitudAfiliacionExists(id))
                 {
                     return NotFound();
                 }
@@ -74,20 +74,20 @@ namespace ServerStraviaTec.Controllers
             return NoContent();
         }
 
-        // POST: api/Deportistas
+        // POST: api/solicitudAfiliacions
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Deportista>> PostDeportista(Deportista deportista)
+        public async Task<ActionResult<solicitudAfiliacion>> PostsolicitudAfiliacion(solicitudAfiliacion solicitudAfiliacion)
         {
-            _context.Deportista.Add(deportista);
+            _context.solicitudAfiliacion.Add(solicitudAfiliacion);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (DeportistaExists(deportista.Usuario))
+                if (solicitudAfiliacionExists(solicitudAfiliacion.idAfiliacion))
                 {
                     return Conflict();
                 }
@@ -97,28 +97,28 @@ namespace ServerStraviaTec.Controllers
                 }
             }
 
-            return CreatedAtAction("GetDeportista", new { id = deportista.Usuario }, deportista);
+            return CreatedAtAction("GetsolicitudAfiliacion", new { id = solicitudAfiliacion.idAfiliacion }, solicitudAfiliacion);
         }
 
-        // DELETE: api/Deportistas/5
+        // DELETE: api/solicitudAfiliacions/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Deportista>> DeleteDeportista(string id)
+        public async Task<ActionResult<solicitudAfiliacion>> DeletesolicitudAfiliacion(string id)
         {
-            var deportista = await _context.Deportista.FindAsync(id);
-            if (deportista == null)
+            var solicitudAfiliacion = await _context.solicitudAfiliacion.FindAsync(id);
+            if (solicitudAfiliacion == null)
             {
                 return NotFound();
             }
 
-            _context.Deportista.Remove(deportista);
+            _context.solicitudAfiliacion.Remove(solicitudAfiliacion);
             await _context.SaveChangesAsync();
 
-            return deportista;
+            return solicitudAfiliacion;
         }
 
-        private bool DeportistaExists(string id)
+        private bool solicitudAfiliacionExists(string id)
         {
-            return _context.Deportista.Any(e => e.Usuario == id);
+            return _context.solicitudAfiliacion.Any(e => e.idAfiliacion == id);
         }
     }
 }

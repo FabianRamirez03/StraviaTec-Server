@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {}
+    "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {
+    "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+        "projectUniqueName": "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
         "projectName": "APIStraviaTec",
-        "projectPath": "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+        "projectPath": "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
         "packagesPath": "C:\\Users\\Mario\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\obj\\",
+        "outputPath": "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Mario\\AppData\\Roaming\\NuGet\\NuGet.Config",

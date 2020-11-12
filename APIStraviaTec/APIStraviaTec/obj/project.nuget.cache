@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lA8a0VmWlw5KicEkikeYWtLi2hEQ1vXbB9PG3Wz6QobSxDogDbr91bR5OBsyv4bHN1EY96uLmEaXZmRG9QG2Ag==",
+  "dgSpecHash": "oR3z3NdTJKUmdPub8ZaDOpPEWj48fmzPCSSlfZLpBiWA7kp84lN6ADmmvbYORqSJpk3obBGcSg3UOga/e34uNA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Mario\\Desktop\\ServerStraviaTec\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+  "projectFilePath": "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.csharp\\4.6.0\\microsoft.csharp.4.6.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.data.sqlclient\\1.0.19249.1\\microsoft.data.sqlclient.1.0.19249.1.nupkg.sha512",

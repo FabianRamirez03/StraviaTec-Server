@@ -1,11 +1,11 @@
 --Creacion de funciones
 
 --Crear un usuario
-create or replace function crearUsuario (usuario varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar) returns void
+create or replace function crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar) returns void
 as
 $$
 insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
-values (usuario, contra,nombre,apellido,nacimiento,pais);
+values (userName, contra,nombre,apellido,nacimiento,pais);
 $$
 Language sql
 
@@ -18,7 +18,7 @@ where idUsuario = $1;
 $$
 Language sql
 
---Buscar usuario por nombre
+--Buscar usuario por Nombre
 create or replace function buscarUsuarioNombre (nombre varchar) returns usuario
 as
 $$
@@ -36,12 +36,32 @@ where primerNombre = nombre and apellidos = apellido;
 $$
 Language sql
 
---Crear actividad 
-create or replace function crearActividad (nombre varchar, fechaAct timestamp, tipo varchar) returns void
+--Actualizar un usuario
+create or replace function modificarUsuario (idUser int,userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar)
+returns void
 as
 $$
-insert into actividad (nombreactividad, fecha, tipoactividad) 
-values (nombre, fechaAct, tipo);
+update usuario
+set NombreUsuario = userName, contrasena = contra, primerNombre = nombre, apellidos = apellido, fechaNacimiento = nacimiento, nacionalidad = pais
+where idUsuario = idUser;
+$$
+Language sql
+
+--Eliminar un usuario por su ID
+create or replace function eliminarUsuario (idUser int)
+returns void
+as
+$$
+Delete from usuario where idUsuario = idUser
+$$
+Language sql
+
+--Eliminar un usuario por su nombre de usuario
+create or replace function eliminarUsuario (userName varchar)
+returns void
+as
+$$
+Delete from usuario where nombreUsuario = userName
 $$
 Language sql
 
@@ -53,6 +73,54 @@ Select * from actividad
 where nombreActividad = nombre;
 $$
 Language sql
+
+--Buscar actividad por id
+create or replace function buscarActividadNombre (idAct int) returns actividad
+as
+$$
+Select * from actividad
+where idActividad = idAct;
+$$
+Language sql
+
+--Actividades por usuario
+create or replace function actividadPorUsuario (idAct int) returns actividad
+as
+$$
+Select idUsuario,primerNombre,idActividad, nombreActividad from usuario
+inner join 
+$$
+Language sql
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--Crear actividad 
+create or replace function crearActividad (nombre varchar, fechaAct timestamp, tipo varchar) returns void
+as
+$$
+insert into actividad (nombreactividad, fecha, tipoactividad) 
+values (nombre, fechaAct, tipo);
+$$
+Language sql
+
+
+
 
 --Asociar deportista con actividad
 create or replace function UnirActividadDeportista (idDep integer, idActiv integer) returns void
@@ -70,12 +138,6 @@ insert into actividadDeportista (idActividad,idDeportista) values (idActiv, idDe
 $$
 Language sql
 
---CORREGIR ESTO************************** es para mostrar usuarios y sus actividades
-select (nombreActividad) from actividadDeportista as nomAct
-inner join actividad as act
-On nomAct.idactividad = act.idactividad
-inner join usuario as usr
-On usr.idusuario = nomAct.iddeportista
 
 
 --Agregar amigos a un usuario por id

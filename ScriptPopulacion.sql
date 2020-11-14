@@ -13,7 +13,6 @@ insert into AmigosUsuario values (2,1);
 insert into actividad(nombreActividad,fecha, hora,tipoActividad) 
 values ('Caminata Recreacional','2018-06-22 20:10:25','caminar');
 
-
 --Tabla ActividadDeportista
 insert into ActividadDeportista (idActividad,idDeportista) values ('1','1');
 insert into ActividadDeportista (idActividad,idDeportista) values ('2','1');
@@ -29,6 +28,15 @@ insert into UsuariosPorGrupo values ('1','Moncho Bikers');
 insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria)
 values ('1','Vuelta al Arenal','2016-06-22 19:10:25','Bicicleta',10500,'CR-5412378');
 
+insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria,privada)
+values ('1','Palmarin','2020-06-22 19:10:25','Caminata',5000,'CR-5412378','True');
+
+--Tabla carrerasGrupo
+insert into CarrerasGrupo values ('Moncho Bikers','4')
+
+--Tabla solicitudesCarrera
+insert into solicitudesCarrera (idCarrera,idUsuario) values (1,4);
+
 --Tabla UsuariosCarrera
 insert into usuariosCarrera (idDeportista,idcarrera) values ('2','1');
 
@@ -38,7 +46,13 @@ insert into categoriaCarrera values ('1','MasterA');
 
 --Tabla Reto
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('1','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20','2020-10-25','Senderismo','altitud');
+values ('1','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
+
+insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto, privada)
+values ('1','Corrientes de Jaco','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
+
+--Tabla carrerasGrupo
+insert into RetosGrupo values ('Moncho Bikers','3')
 
 --Tabla usuariosReto
 insert into usuariosReto (idDeportista,idReto) values ('2','1');

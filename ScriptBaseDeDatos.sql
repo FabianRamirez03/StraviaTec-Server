@@ -48,6 +48,19 @@ create table usuariosPorGrupo(
 	primary key (idUsuario, nombreGrupo)
 );
 
+create table CarrerasGrupo(
+	nombreGrupo text not null,
+	idCarrera int not null,
+	primary key (nombreGrupo,idCarrera)
+);
+
+create table RetosGrupo(
+	nombreGrupo text not null,
+	idReto int not null,
+	primary key (nombreGrupo,idReto)
+);
+
+
 create table Carrera(
 	idCarrera serial primary key not null,
 	idOrganizador int not null,
@@ -66,10 +79,16 @@ create table categoriaCarrera(
 	primary key (idCarrera, categoria)
 );
 
+create table solicitudesCarrera(
+	idCarrera int not null,
+	idUsuario int not null,
+	recibo bytea,
+	primary key (idCarrera, idUsuario)
+);
+
 create table usuariosCarrera (
 	idDeportista int not null,
 	idCarrera int not null,
-	recibo bytea,
 	tiempoRegistrado text,
 	kilometraje text,
 	altura text,
@@ -78,13 +97,14 @@ create table usuariosCarrera (
 	primary key (idDeportista,idCarrera)
 );
 
+
 create table Reto(
 	idReto serial primary key not null,
 	idOrganizador int not null,
 	nombreReto text not null,
 	objetivoReto text not null,
-	fechaInicio date,
-	fechaFinaliza date,
+	fechaInicio timestamp,
+	fechaFinaliza timestamp,
 	tipoActividad text not null,
 	tipoReto text not null,
 	privada boolean default 'False'

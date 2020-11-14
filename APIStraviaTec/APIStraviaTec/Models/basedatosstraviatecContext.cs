@@ -19,12 +19,15 @@ namespace APIStraviaTec.Models
         public virtual DbSet<Actividaddeportista> Actividaddeportista { get; set; }
         public virtual DbSet<Amigosusuario> Amigosusuario { get; set; }
         public virtual DbSet<Carrera> Carrera { get; set; }
+        public virtual DbSet<Carrerasgrupo> Carrerasgrupo { get; set; }
         public virtual DbSet<Categoriacarrera> Categoriacarrera { get; set; }
         public virtual DbSet<Grupo> Grupo { get; set; }
         public virtual DbSet<Patrocinador> Patrocinador { get; set; }
         public virtual DbSet<Patrocinadorescarrera> Patrocinadorescarrera { get; set; }
         public virtual DbSet<Patrocinadoresreto> Patrocinadoresreto { get; set; }
         public virtual DbSet<Reto> Reto { get; set; }
+        public virtual DbSet<Retosgrupo> Retosgrupo { get; set; }
+        public virtual DbSet<Solicitudescarrera> Solicitudescarrera { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<Usuarioscarrera> Usuarioscarrera { get; set; }
         public virtual DbSet<Usuariosporgrupo> Usuariosporgrupo { get; set; }
@@ -50,11 +53,7 @@ namespace APIStraviaTec.Models
 
                 entity.Property(e => e.Idactividad).HasColumnName("idactividad");
 
-                entity.Property(e => e.Fecha)
-                    .HasColumnName("fecha")
-                    .HasColumnType("date");
-
-                entity.Property(e => e.Hora).HasColumnName("hora");
+                entity.Property(e => e.Fecha).HasColumnName("fecha");
 
                 entity.Property(e => e.Nombreactividad)
                     .IsRequired()
@@ -141,6 +140,18 @@ namespace APIStraviaTec.Models
                     .HasConstraintName("fk_organizadorcarrera");
             });
 
+            modelBuilder.Entity<Carrerasgrupo>(entity =>
+            {
+                entity.HasKey(e => new { e.Nombregrupo, e.Idcarrera })
+                    .HasName("carrerasgrupo_pkey");
+
+                entity.ToTable("carrerasgrupo");
+
+                entity.Property(e => e.Nombregrupo).HasColumnName("nombregrupo");
+
+                entity.Property(e => e.Idcarrera).HasColumnName("idcarrera");
+            });
+
             modelBuilder.Entity<Categoriacarrera>(entity =>
             {
                 entity.HasKey(e => new { e.Idcarrera, e.Categoria })
@@ -224,13 +235,9 @@ namespace APIStraviaTec.Models
 
                 entity.Property(e => e.Idreto).HasColumnName("idreto");
 
-                entity.Property(e => e.Fechafinaliza)
-                    .HasColumnName("fechafinaliza")
-                    .HasColumnType("date");
+                entity.Property(e => e.Fechafinaliza).HasColumnName("fechafinaliza");
 
-                entity.Property(e => e.Fechainicio)
-                    .HasColumnName("fechainicio")
-                    .HasColumnType("date");
+                entity.Property(e => e.Fechainicio).HasColumnName("fechainicio");
 
                 entity.Property(e => e.Idorganizador).HasColumnName("idorganizador");
 
@@ -259,6 +266,32 @@ namespace APIStraviaTec.Models
                     .HasForeignKey(d => d.Idorganizador)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_organizadorreto");
+            });
+
+            modelBuilder.Entity<Retosgrupo>(entity =>
+            {
+                entity.HasKey(e => new { e.Nombregrupo, e.Idreto })
+                    .HasName("retosgrupo_pkey");
+
+                entity.ToTable("retosgrupo");
+
+                entity.Property(e => e.Nombregrupo).HasColumnName("nombregrupo");
+
+                entity.Property(e => e.Idreto).HasColumnName("idreto");
+            });
+
+            modelBuilder.Entity<Solicitudescarrera>(entity =>
+            {
+                entity.HasKey(e => new { e.Idcarrera, e.Idusuario })
+                    .HasName("solicitudescarrera_pkey");
+
+                entity.ToTable("solicitudescarrera");
+
+                entity.Property(e => e.Idcarrera).HasColumnName("idcarrera");
+
+                entity.Property(e => e.Idusuario).HasColumnName("idusuario");
+
+                entity.Property(e => e.Recibo).HasColumnName("recibo");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
@@ -319,8 +352,6 @@ namespace APIStraviaTec.Models
                     .HasDefaultValueSql("false");
 
                 entity.Property(e => e.Kilometraje).HasColumnName("kilometraje");
-
-                entity.Property(e => e.Recibo).HasColumnName("recibo");
 
                 entity.Property(e => e.Recorrido)
                     .HasColumnName("recorrido")

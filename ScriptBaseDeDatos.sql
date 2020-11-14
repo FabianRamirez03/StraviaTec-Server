@@ -26,7 +26,6 @@ create table Actividad(
 	tipoActividad text not null
 );
 
-
 create table ActividadDeportista(
 	idActividad int not null,
 	idDeportista int not null,
@@ -59,7 +58,6 @@ create table RetosGrupo(
 	idReto int not null,
 	primary key (nombreGrupo,idReto)
 );
-
 
 create table Carrera(
 	idCarrera serial primary key not null,
@@ -97,7 +95,6 @@ create table usuariosCarrera (
 	primary key (idDeportista,idCarrera)
 );
 
-
 create table Reto(
 	idReto serial primary key not null,
 	idOrganizador int not null,
@@ -120,7 +117,6 @@ create table usuariosReto (
 	Recorrido xml,
 	primary key (idDeportista,idReto)
 );
-
 
 --Tabla Constante
 create table Patrocinador(

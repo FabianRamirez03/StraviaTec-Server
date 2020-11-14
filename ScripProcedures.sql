@@ -10,6 +10,8 @@ where idUsuario = idBuscar;
 end
 $$
 
+call getUsuarioPorID (1)
+
 --Agregar un usuario
 create or replace procedure agregarUsuario(userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais  varchar)
 language plpgsql

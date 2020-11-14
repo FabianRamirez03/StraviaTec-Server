@@ -82,7 +82,7 @@ Language sql
 
 
 --Buscar actividad por id
-create or replace function buscarActividadNombre (idAct int) returns actividad
+create or replace function buscarActividadID (idAct int) returns actividad
 as
 $$
 Select * from actividad
@@ -119,7 +119,6 @@ inner join actividadDeportista ad
 	inner join actividad act
 		on act.idActividad = ad.idActividad
 		order by act.fecha desc
-
 $$
 Language sql
 
@@ -136,27 +135,110 @@ $$
 Language sql
 
 
---Agregar patrocinador a una carrera
+--Agregar patrocinador a una carrera, valida que exista el patrocinador
 create or replace function agregarPatrocinadorCarrera (idCarr int, nombrePatrocinador varchar)
 	returns void
 	as
-$$
+	$$
 	insert into PatrocinadoresCarrera (idCarrera, nombreComercial)
-	values (idCarr, nombrePatrocinador);
+	select idCarr, nombrePatrocinador
+	where exists (select 1 from Patrocinador where nombreComercial = nombrePatrocinador);
+	$$
+Language sql
 
+
+--Modificar carrera
+create or replace function modificarCarrera (
+	idCarr int, idOrg int, nomCarr varchar, fechCarr timestamp, tipAct varchar, ruta xml, privacidad boolean, precio int, cuenta varchar)
+	returns void
+	as
+	$$
+	update Carrera set idOrganizador = idOrg, nombreCarrera = nomCarr, fechaCarrera = fechCarr, TipoActividad = tipAct,
+	recorrido = ruta, privada = privacidad, costo = precio, cuentaBancaria = cuenta
+	where idCarrera = idCarr
+	$$
+Language sql
+
+
+--Eliminar una carrera
+create or replace function eliminarCarreraID (idCarr int)
+returns void
+as
+$$
+Delete from carrera where idCarrera = idCarr
 $$
 Language sql
-select * from patrocinador
-select agregarPatrocinadorCarrera (5,'Gatorade')
 
 
+--Agregar solicitud de afiliacion a una carrera
+create or replace function enviarSolicitudCarrera (idCarr int, idUser int, recib bytea)
+returns void
+as
+$$
+insert into solicitudesCarrera (idCarrera, idUsuario, recibo)
+select idCarr, idUser, recib
+where exists (select 1 from Carrera where idCarrera = idCarr);
+$$
+Language sql
 
 
+--Eliminar solicitud de Afiliacion
+create or replace function eliminarSolicitud (idUser int, idCarr int)
+returns void
+as
+$$
+Delete from solicitudesCarrera where idCarrera = idCarr and idUsuario = idUser
+$$
+Language sql
 
 
+--Crear un nuevo reto
+create or replace function crearReto (
+	idOrga int, nombReto varchar,obj varchar, fechaInc timestamp, fechaFin timestamp, tipoAct varchar,
+	tipoRet varchar, privacidad boolean) 
+	returns void
+	as
+	$$
+	insert into Reto (idOrganizador, nombreReto, objetivoReto, fechaInicio, fechaFinaliza, tipoActividad,
+					  tipoReto, privada) 
+	values (idOrga, nombReto, obj, fechaInc, fechaFin, tipoAct, tipoRet, privacidad);
+	$$
+Language sql
 
 
+--Modificar Reto
+create or replace function modificarReto (
+	idRet int, idOrga int, nombReto varchar,obj varchar, fechaInc timestamp, fechaFin timestamp, tipoAct varchar,
+	tipoRet varchar, privacidad boolean)
+	returns void
+	as
+	$$
+	update Reto set idOrganizador = idOrga, nombreReto = nombReto, objetivoReto = obj, fechaInicio = fechaInc,
+	fechaFinaliza = fechaFin, tipoActividad = tipoAct, tipoReto = tipoRet, privada = privacidad
+	where idReto = idRet
+	$$
+Language sql
 
+
+--Eliminar Reto
+create or replace function eliminarRetoID (idRet int)
+returns void
+as
+$$
+Delete from Reto where idReto = idRet
+$$
+Language sql
+
+
+--Validacion de usuario y contrasena
+create or replace function validacionDeUsuario (userName varchar, clave varchar)
+returns boolean
+as
+$$
+select exists (select from Usuario where nombreUsuario = userName and contrasena = clave)
+$$
+Language sql
+select * from usuario
 
 
 
@@ -178,8 +260,6 @@ insert into actividad (nombreactividad, fecha, tipoactividad)
 values (nombre, fechaAct, tipo);
 $$
 Language sql
-
-
 
 
 --Asociar deportista con actividad

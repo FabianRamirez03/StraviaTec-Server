@@ -11,11 +11,11 @@ Language sql
 
 
 --Buscar usuario por ID
-create or replace function buscarUsuarioId (int) returns usuario
+create or replace function buscarUsuarioId (idUser int) returns usuario
 as
 $$
 Select * from usuario
-where idUsuario = $1;
+where idUsuario = idUser;
 $$
 Language sql
 
@@ -455,6 +455,12 @@ Language sql
 
 
 --Modificar un grupo
+create or replace function modificarGrupo (nombGrup varchar, idAdmin integer) returns void
+as
+$$
+insert into Grupo (nombre,idAdministrador) values (nombGrup, idAdmin);
+$$
+Language sql
 
-
+select * from Grupo
 

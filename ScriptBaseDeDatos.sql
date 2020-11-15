@@ -161,3 +161,7 @@ alter table Reto
 add constraint FK_organizadorReto
 foreign key (idOrganizador) references usuario (idUsuario);
 
+alter table Reto
+add constraint UQ_nombreUnico
+unique(nombreReto)
+

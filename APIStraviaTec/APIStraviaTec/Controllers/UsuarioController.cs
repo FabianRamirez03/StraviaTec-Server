@@ -51,7 +51,7 @@ namespace APIStraviaTec.Controllers
         [Route("usuarioid")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public List<Usuario> Post([FromBody] Usuario usuario)
+        public List<Usuario> PostUsuarioId([FromBody] Usuario usuario)
         {
             List<Usuario> Usuarioret = new List<Usuario>();
             //Connect to a PostgreSQL database
@@ -95,6 +95,31 @@ namespace APIStraviaTec.Controllers
                 }
                 
             }
+            conn.Close();
+            return Usuarioret;
+        }
+
+        [Route("crearUsuario")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Usuario> PostcrearUsuario([FromBody] Usuario usuario)
+        {
+            List<Usuario> Usuarioret = new List<Usuario>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("crearUsuario", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nombreusuario);
+            command.Parameters.AddWithValue("@contra", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Contrasena);
+            command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
+            command.Parameters.AddWithValue("@apellido", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Apellidos);
+            command.Parameters.AddWithValue("@nacimiento", NpgsqlTypes.NpgsqlDbType.Date, usuario.Fechanacimiento);
+            command.Parameters.AddWithValue("@pais", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nacionalidad);
+            // Execute the query and obtain a result set
+            command.ExecuteNonQuery();
+            Debug.WriteLine("Usuario creado exitosamente");
             conn.Close();
             return Usuarioret;
         }

@@ -141,6 +141,7 @@ create table PatrocinadoresCarrera(
 );
 
 --Modificacion de tablas
+
 --Tabla usuario
 alter table usuario
 add constraint UQ_nombreUsuario

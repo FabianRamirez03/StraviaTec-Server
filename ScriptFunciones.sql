@@ -25,7 +25,7 @@ create or replace function buscarUsuarioNombre (nombre varchar) returns usuario
 as
 $$
 Select * from usuario
-where primerNombre = nombre;
+where Upper (primerNombre) = Upper (nombre);
 $$
 Language sql
 
@@ -35,7 +35,7 @@ create or replace function buscarUsuarioNombreApellido (nombre varchar, apellido
 as
 $$
 Select * from usuario
-where primerNombre = nombre and apellidos = apellido;
+where Upper (primerNombre) = Upper (nombre) and Upper(apellidos) = Upper(apellido);
 $$
 Language sql
 
@@ -68,16 +68,15 @@ create or replace function eliminarUsuarioID (idUser int)
 returns void
 as
 $$
-Delete from usuario where idUsuario = idUser
-$$
-Language sql
-
---Eliminar un usuario por su nombre de usuario
-create or replace function eliminarUsuarioNombre (userName varchar)
-returns void
-as
-$$
-Delete from usuario where nombreUsuario = userName
+Delete from usuario where idUsuario = idUser;
+Delete from actividadDeportista where idDeportista = idUser;
+Delete from usuariosPorGrupo where idUsuario = idUser;
+Delete from amigosUsuario where idDeportista = idUser or idAmigo = idUser;
+Delete from carrera where idOrganizador = idUser;
+Delete from solicitudesCarrera where idUsuario = idUser;
+Delete from usuariosCarrera where idDeportista = idUser;
+Delete from Reto where idOrganizador = idUser;
+Delete from usuariosReto where idDeportista = idUser;
 $$
 Language sql
 
@@ -87,7 +86,7 @@ create or replace function buscarActividadNombre (nombre varchar) returns activi
 as
 $$
 Select * from actividad
-where nombreActividad = nombre;
+where Upper(nombreActividad) = Upper(nombre);
 $$
 Language sql
 
@@ -177,7 +176,12 @@ create or replace function eliminarCarreraID (idCarr int)
 returns void
 as
 $$
-Delete from carrera where idCarrera = idCarr
+Delete from carrera where idCarrera = idCarr;
+Delete from carrerasGrupo where idCarrera = idCarr;
+Delete from categoriaCarrera where idCarrera = idCarr;
+Delete from solicitudesCarrera where idCarrera = idCarr;
+Delete from usuariosCarrera where idCarrera = idCarr;
+Delete from patrocinadoresCarrera where idCarrera = idCarr;
 $$
 Language sql
 
@@ -256,7 +260,10 @@ create or replace function eliminarRetoID (idRet int)
 returns void
 as
 $$
-Delete from Reto where idReto = idRet
+Delete from Reto where idReto = idRet;
+Delete from RetosGrupo where idReto = idRet;
+Delete from usuariosReto where idReto = idRet;
+Delete from patrocinadoresReto where idReto = idRet
 $$
 Language sql
 
@@ -353,17 +360,6 @@ $$
 Language sql
 
 
-
-
-
-
-
-
-
-
-
-
-
 --Crear actividad 
 create or replace function crearActividad (nombre varchar, fechaAct timestamp, tipo varchar) returns void
 as
@@ -374,21 +370,91 @@ $$
 Language sql
 
 
---Asociar deportista con actividad
-create or replace function UnirActividadDeportista (idDep integer, idActiv integer) returns void
+--Modificar el nombre de una Actividad
+create or replace function modificarActividad (idAct integer, nombre varchar) returns void
+as
+$$
+update actividad
+set nombreActividad = nombre
+where idAct = idActividad
+$$
+Language sql
+
+--Eliminar una actividad
+create or replace function eliminarActividad (idAct integer) returns void
+as
+$$
+Delete from Actividad where idActividad = idAct;
+Delete from ActividadDeportista where idActividad = idAct
+$$
+Language sql
+
+
+--Actualizar reto
+create or replace function actualizarReto (idRet integer, distanciaNueva varchar, tiempo varchar) returns void
+as
+$$
+Update usuariosReto set kilometraje = distanciaNueva, duracion = tiempo
+where idReto = idRet
+$$
+Language sql
+
+
+--Agregar un usuario a una carrera
+create or replace function agregarUsuarioCarrera (idDep integer, idCarr integer) returns void
+as
+$$
+insert into usuariosCarrera (idDeportista,idcarrera) values (idDep, idCarr)
+$$
+Language sql
+
+
+--Eliminar un usuario de una carrera
+create or replace function eliminarUsuarioCarrera (idDep integer, idCarr integer) returns void
+as
+$$
+Delete from usuariosCarrera where idDeportista = idDep and idCarrera = idCarr
+$$
+Language sql
+
+
+--Agregar usuario a un reto
+create or replace function agregarUsuarioReto(idDep integer, idRet integer) returns void
+as
+$$
+insert into usuariosReto (idDeportista,idReto) values (idDep, idRet)
+$$
+Language sql
+
+
+--Eliminar un usuario de un reto
+create or replace function eliminarUsuarioReto (idDep integer, idRet integer) returns void
+as
+$$
+Delete from usuariosReto where idDeportista = idDep and idReto = idRet
+$$
+Language sql
+
+
+--Agregar un deportista a una actividad
+create or replace function agregarUsuarioActividad (idDep integer, idActiv integer) returns void
 as
 $$
 insert into actividadDeportista (idActividad,idDeportista) values (idActiv, idDep);
 $$
 Language sql
 
---Buscar Actividades por deportista
-create or replace function BuscActivDeport (idDep integer, idActiv integer) returns void
+
+--Agregar un grupo
+create or replace function crearGrupo (nombGrup varchar, idAdmin integer) returns void
 as
 $$
-insert into actividadDeportista (idActividad,idDeportista) values (idActiv, idDep);
+insert into Grupo (nombre,idAdministrador) values (nombGrup, idAdmin);
 $$
 Language sql
+
+
+--Modificar un grupo
 
 
 

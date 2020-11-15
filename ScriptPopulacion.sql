@@ -63,6 +63,7 @@ insert into RetosGrupo values ('Moncho Bikers','3')
 insert into usuariosReto (idDeportista,idReto) values ('2','1');
 insert into usuariosReto (idDeportista,idReto) values ('4','3');
 
+
 --Tabla de Patrocinadores 
 insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
 values ('Piros', 'Julio Vargas', '22655331');

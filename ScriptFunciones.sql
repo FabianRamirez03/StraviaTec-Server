@@ -1,11 +1,11 @@
 --Creacion de funciones
 
 --Crear un usuario
-create or replace function crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar) returns void
+create or replace function crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar, imagen bytea) returns void
 as
 $$
-insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
-values (userName, contra,nombre,apellido,nacimiento,pais);
+insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad, foto) 
+values (userName, contra,nombre,apellido,nacimiento,pais, imagen);
 $$
 Language sql
 

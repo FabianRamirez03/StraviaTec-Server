@@ -4,10 +4,11 @@
 create or replace function crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar, imagen bytea) returns void
 as
 $$
-insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad, foto) 
-values (userName, contra,nombre,apellido,nacimiento,pais, imagen);
+insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad, foto, edad) 
+values (userName, contra,nombre,apellido,nacimiento,pais, imagen, extract (year from age(nacimiento)));--Calcula la edad
 $$
 Language sql
+
 
 
 --Buscar usuario por ID
@@ -207,6 +208,15 @@ $$
 Language sql
 
 
+--Aceptar solicitud de afiliacion a la carrera
+create or replace function aceptarSolicitud (idCarr int, idUser int) returns void
+as
+$$
+select agregarUsuarioCarrera (idUser,idCarr)
+$$
+Language sql
+
+
 --Eliminar solicitud de Afiliacion
 create or replace function eliminarSolicitud (idUser int, idCarr int)
 returns void
@@ -219,11 +229,11 @@ Language sql
 
 --Carreras de los usuario
 create or replace function CarrerasUsuarios () returns table (
-	idUsuario int, primerNombre varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
+	idUsuario int, primerNombre varchar, apellidos varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
 	fechaCarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
 as
 $$
-Select d.idUsuario, d.primerNombre, uc.idCarrera, carr.nombreCarrera, carr.tipoActividad, carr.fechaCarrera,
+Select d.idUsuario, d.primerNombre, d.apellidos, uc.idCarrera, carr.nombreCarrera, carr.tipoActividad, carr.fechaCarrera,
 		uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
 from usuario d
 inner join usuariosCarrera as uc
@@ -445,6 +455,18 @@ $$
 Language sql
 
 
+--Buscar retos por usuario
+create or replace function retosPorUsuario (idUser integer) 
+returns table (idUsuario int, NombreUsuario varchar, idReto integer, nombreReto varchar, objetivoReto varchar, tipoActividad varchar, tipoReto varchar,
+			   fechaInicio timestamp, fechaFinaliza timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
+as
+$$
+select * from retosUsuarios()
+where idUsuario = idUser
+$$
+Language sql
+
+
 --Agregar un deportista a una actividad
 create or replace function agregarUsuarioActividad (idDep integer, idActiv integer) returns void
 as
@@ -521,7 +543,7 @@ Language sql
 
 --Ver carreras por usuario
 create or replace function buscarCarrerasPorUsuaio (idUser integer)
-returns table (idUsuario int, primerNombre varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
+returns table (idUsuario int, primerNombre varchar, apellidos varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
 				fechaCarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
 as
 $$
@@ -532,12 +554,29 @@ Language sql
 
 select * from usuariosCarrera
 
---Ver posiciones de la carrera
-create or replace function posicionesCarrera (idCarr integer)
-returns table (NombreUsuario varchar, Tiempo varchar)
+
+--lista de participantes en la carrera
+create or replace function participantesCarrera (idCarr integer)
+returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoria varchar)
 as
 $$
-Select d.PrimerNombre, uc.tiempoRegistrado from usuario as d
+select cu.primerNombre, cu.apellidos, u.fechaNacimiento, cc.categoria from carrerasUsuarios() as cu
+inner join usuario as u
+on u.primerNombre = cu.primerNombre and u.apellidos = cu.apellidos
+inner join categoriaCarrera as cc
+on cc.idCarrera = cu.idCarrera
+where cu.idCarrera = idCarr
+order by cc.categoria
+$$
+Language sql
+
+
+--Ver posiciones de la carrera
+create or replace function posicionesCarrera (idCarr integer)
+returns table (NombreUsuario varchar, apellido varchar, edad varchar, tiempo varchar, categoria varchar)
+as
+$$
+Select d.PrimerNombre, d.Apellidos, edad, uc.tiempoRegistrado from usuario as d
 	Inner join usuariosCarrera as uc
 	on d.idUsuario = uc.idDeportista
 	where idCarr = uc.idCarrera
@@ -545,17 +584,9 @@ Select d.PrimerNombre, uc.tiempoRegistrado from usuario as d
 $$
 Language sql
 
+select * from participantesCarrera (1)
 
-
-
-create or replace function agregarUsuarioGrupo (idUser integer, idGroup integer)
-returns void
-as
-$$
-
-$$
-Language sql
-
+select extract (year from age((select fechaNacimiento from usuario where primerNombre = 'Mario')))
 
 
 

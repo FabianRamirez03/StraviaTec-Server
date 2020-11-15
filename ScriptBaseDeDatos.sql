@@ -37,26 +37,27 @@ create table ActividadDeportista(
 );
 
 create table Grupo(
-	nombre text primary key not null,
+	idGrupo serial primary key not null,
+	nombre text not null,
 	idAdministrador int not null	
 );
 
 create table usuariosPorGrupo(
 	idUsuario int not null,
-	nombreGrupo text not null,
-	primary key (idUsuario, nombreGrupo)
+	idGrupo int not null,
+	primary key (idUsuario, idGrupo)
 );
 
 create table CarrerasGrupo(
-	nombreGrupo text not null,
+	idGrupo int not null,
 	idCarrera int not null,
-	primary key (nombreGrupo,idCarrera)
+	primary key (idGrupo,idCarrera)
 );
 
 create table RetosGrupo(
-	nombreGrupo text not null,
+	idGrupo int not null,
 	idReto int not null,
-	primary key (nombreGrupo,idReto)
+	primary key (idGrupo,idReto)
 );
 
 create table Carrera(
@@ -151,6 +152,11 @@ unique (NombreUsuario)
 alter table Grupo 
 add constraint FK_administrador 
 foreign key (idAdministrador) references usuario (idUsuario);
+
+alter table Grupo 
+add constraint UQ_nombreGrupo 
+unique (nombre);
+
 
 --Tabla Carrera
 alter table Carrera 

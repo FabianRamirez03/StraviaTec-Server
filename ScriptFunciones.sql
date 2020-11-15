@@ -19,6 +19,15 @@ where idUsuario = idUser;
 $$
 Language sql
 
+--Buscar usuario por User Name
+create or replace function buscarUsuarioUserName (userName varchar) returns usuario
+as
+$$
+Select * from usuario
+where nombreUsuario = userName;
+$$
+Language sql
+
 
 --Buscar usuario por Nombre
 create or replace function buscarUsuarioNombre (nombre varchar) returns usuario
@@ -52,12 +61,12 @@ Language sql
 
 
 --Actualizar un usuario
-create or replace function modificarUsuario (idUser int,userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar)
+create or replace function modificarUsuario (idUser int,userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar,imagen bytea)
 returns void
 as
 $$
 update usuario
-set NombreUsuario = userName, contrasena = contra, primerNombre = nombre, apellidos = apellido, fechaNacimiento = nacimiento, nacionalidad = pais
+set NombreUsuario = userName, contrasena = contra, primerNombre = nombre, apellidos = apellido, fechaNacimiento = nacimiento, nacionalidad = pais, foto = imagen
 where idUsuario = idUser;
 $$
 Language sql
@@ -455,12 +464,99 @@ Language sql
 
 
 --Modificar un grupo
-create or replace function modificarGrupo (nombGrup varchar, idAdmin integer) returns void
+create or replace function modificarGrupo (idGroup int, nombGrup varchar, idAdmin integer) returns void
 as
 $$
-insert into Grupo (nombre,idAdministrador) values (nombGrup, idAdmin);
+Update Grupo set nombre = nombGrup, idAdministrador = idAdmin
+where idGrupo = idGroup;
 $$
 Language sql
 
-select * from Grupo
+
+--Eliminar un grupo
+create or replace function EliminarGrupo (idGroup int) returns void
+as
+$$
+Delete from Grupo where idGrupo = idGroup;
+Delete from UsuariosPorGrupo where idGrupo = idGroup;
+Delete from RetosGrupo where idGrupo = idGroup;
+Delete from CarrerasGrupo where idGrupo = idGroup;
+$$
+Language sql
+
+--Ver usuarios del grupo
+create or replace function usuariosGrupo (idGroup integer)
+returns table (NombreGrupo varchar, idUsuario integer, NombreUsuario varchar, ApellidosUsuario varchar)
+as
+$$
+Select gr.Nombre, u.idUsuario, u.PrimerNombre, u.Apellidos
+	from usuario as u
+	inner join usuariosPorGrupo as ug
+	on u.idUsuario = ug.idUsuario
+		inner join Grupo as gr
+		on gr.idgrupo = ug.idgrupo
+		where idGroup = gr.idGrupo
+$$
+Language sql
+
+
+--Agregar usuario a un grupo
+create or replace function agregarUsuarioGrupo (idUser integer, idGroup integer)
+returns void
+as
+$$
+insert into usuariosPorGrupo (idUsuario, idGrupo) values (idUser, idGroup);
+$$
+Language sql
+
+
+--Eliminar usuario de un grupo
+create or replace function eliminarUsuarioGrupo (idUser integer, idGroup integer)
+returns void
+as
+$$
+Delete from usuariosPorGrupo where idUsuario = idUser;
+$$
+Language sql
+
+--Ver carreras por usuario
+create or replace function buscarCarrerasPorUsuaio (idUser integer)
+returns table (idUsuario int, primerNombre varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
+				fechaCarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
+as
+$$
+select * from carrerasUsuarios() 
+where idUsuario = idUser;
+$$
+Language sql
+
+select * from usuariosCarrera
+
+--Ver posiciones de la carrera
+create or replace function posicionesCarrera (idCarr integer)
+returns table (NombreUsuario varchar, Tiempo varchar)
+as
+$$
+Select d.PrimerNombre, uc.tiempoRegistrado from usuario as d
+	Inner join usuariosCarrera as uc
+	on d.idUsuario = uc.idDeportista
+	where idCarr = uc.idCarrera
+	order by uc.TiempoRegistrado asc
+$$
+Language sql
+
+
+
+
+create or replace function agregarUsuarioGrupo (idUser integer, idGroup integer)
+returns void
+as
+$$
+
+$$
+Language sql
+
+
+
+
 

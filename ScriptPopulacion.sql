@@ -53,11 +53,11 @@ insert into categoriaCarrera values ('1','MasterA');
 
 --Tabla Reto
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('3','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
+values ('1','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('3','Fondo de 3 dias', '100km','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo');
+values ('1','Fondo de 3 dias', '100km','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo');
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto, privada)
-values ('3','Corrientes del Arenal','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
+values ('1','Corrientes del Arenal','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
 
 --Tabla carrerasGrupo
 insert into RetosGrupo values ('1','3')

@@ -1,3 +1,5 @@
+--Creacion de la base de datos
+Create database basedatosstraviatec;
 
 --Creacion de las tablas con sus llaves primarias
 create table usuario(
@@ -12,6 +14,7 @@ create table usuario(
 	edad integer,
 	categoria varchar
 );
+
 
 create table AmigosUsuario(
 	idDeportista int not null,
@@ -31,10 +34,11 @@ create table ActividadDeportista(
 	idDeportista int not null,
 	kilometraje text,
 	altura text,
-	recorrido xml,
+	recorrido text,
 	duracion text,
 	primary key (idActividad,idDeportista)
 );
+
 
 create table Grupo(
 	idGrupo serial primary key not null,
@@ -66,11 +70,12 @@ create table Carrera(
 	nombreCarrera text not null,
 	fechaCarrera timestamp not null,
 	TipoActividad text not null,
-	recorrido xml,
+	recorrido text,
 	privada boolean default 'False',
 	costo int not null,
 	cuentaBancaria text not null
 );
+
 
 create table categoriaCarrera(
 	idCarrera int not null,
@@ -93,7 +98,7 @@ create table usuariosCarrera (
 	kilometraje text,
 	altura text,
 	completitud boolean default 'False',
-	Recorrido xml,
+	Recorrido text,
 	primary key (idDeportista,idCarrera)
 );
 
@@ -110,6 +115,7 @@ create table Reto(
 	privada boolean default 'False'
 );
 
+
 create table usuariosReto (
 	idDeportista int not null,
 	idReto int not null,
@@ -117,9 +123,10 @@ create table usuariosReto (
 	kilometraje text,
 	altura text,
 	completitud boolean default 'False',
-	Recorrido xml,
+	Recorrido text,
 	primary key (idDeportista,idReto)
 );
+
 
 --Tabla Constante
 create table Patrocinador(
@@ -150,6 +157,7 @@ alter table usuario
 add constraint UQ_nombreUsuario
 unique (NombreUsuario)
 
+
 --Tabla Grupo
 alter table Grupo 
 add constraint FK_administrador 
@@ -177,3 +185,4 @@ foreign key (idOrganizador) references usuario (idUsuario);
 alter table Reto
 add constraint UQ_nombreUnico
 unique(nombreReto)
+

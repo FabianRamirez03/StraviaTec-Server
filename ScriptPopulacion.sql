@@ -5,6 +5,7 @@ values ('mario123', '123','Mario','Araya','1999-03-02','costarricense');
 insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
 values ('wajo10', '123','Wajib','Zaglul','1999-04-02','costarricense');
 
+
 --Tabla de los amigos de los usuarios
 insert into AmigosUsuario values (1,2);
 insert into AmigosUsuario values (2,1);
@@ -42,6 +43,9 @@ insert into usuariosCarrera (idDeportista,idcarrera) values ('2','1');
 insert into usuariosCarrera (idDeportista,idcarrera) values ('2','3');
 insert into usuariosCarrera (idDeportista,idcarrera) values ('4','1');
 insert into usuariosCarrera (idDeportista,idcarrera) values ('4','5');
+
+insert into usuariosCarrera (idDeportista,idcarrera) values ('9','4');
+select * from carrera
 
 
 --Tabla categoriaCarrera

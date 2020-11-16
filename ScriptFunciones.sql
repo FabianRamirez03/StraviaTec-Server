@@ -1,14 +1,37 @@
 --Creacion de funciones
 
 --Crear un usuario
-create or replace function crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais  varchar, imagen bytea) returns void
+CREATE OR REPLACE FUNCTION crearUsuario (userName varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar, imagen bytea) RETURNS void AS $$
+DECLARE
+	age INTEGER;
+	categ varchar;
+BEGIN
+  age := extract (year from age(nacimiento));--Calcula la edad y asigna la categoria al usuario
+	if age < 15 then categ = 'Junior';
+	elseif age > 15 and age < 23 then categ = 'Sub-23';
+	elseif age > 24 and age < 30 then categ = 'Open';
+	elseif age > 30 and age < 40 then categ = 'Master-A';
+	elseif age > 41 and age < 50 then categ = 'Master-B';
+	elseif age > 51 then categ = 'Master-C';
+end if;
+insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad, foto, edad, categoria) 
+values (userName, contra,nombre,apellido,nacimiento,pais, imagen, age,categ);
+END;
+$$ LANGUAGE plpgsql;
+
+
+--Asignar categoria segun la edad
+create or replace function asignarCategoriaUsuario(userName varchar)
 as
 $$
-insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad, foto, edad) 
-values (userName, contra,nombre,apellido,nacimiento,pais, imagen, extract (year from age(nacimiento)));--Calcula la edad
+declare 
+	deportista Usuario  := buscarUsuarioUserName(userName);
+begin
+	if deportista.usuario.edad <= 15 then 
+end
 $$
 Language sql
-
+select * from usuario
 
 
 --Buscar usuario por ID
@@ -35,7 +58,7 @@ create or replace function buscarUsuarioNombre (nombre varchar) returns usuario
 as
 $$
 Select * from usuario
-where Upper (primerNombre) = Upper (nombre);
+where Upper (primerNombre) ~* Upper (nombre);
 $$
 Language sql
 
@@ -143,15 +166,24 @@ $$
 Language sql
 
 
-
 --Crear carrera
 create or replace function crearCarrera (
-	idOrga int, nombCarr varchar, fechaEvento timestamp, tipoCarrera varchar, recorridoCarrera xml, privacidad boolean, precio int, cuentaBanc varchar) 
+	idOrga int, nombCarr varchar, fechaEvento timestamp, tipoCarrera varchar, carreraCategoria varchar, recorridoCarrera xml, privacidad boolean, precio int, cuentaBanc varchar) 
 	returns void
 	as
 	$$
 	insert into Carrera (idOrganizador, nombreCarrera, fechaCarrera, TipoActividad, recorrido, privada, costo, cuentaBancaria) 
 	values (idOrga, nombCarr, fechaEvento, tipoCarrera, recorridoCarrera, privacidad, precio, cuentaBanc);
+	insert into categoriaCarrera (select obteneridCarrera(nombCarr), carreraCategoria)
+$$
+Language sql
+
+
+--Obtener el id de una carrera a partir de su nombre
+create or replace function obteneridCarrera(nombreCarr varchar) returns integer
+as
+$$
+select idCarrera from carrera where nombreCarrera = nombreCarr;
 $$
 Language sql
 
@@ -229,11 +261,11 @@ Language sql
 
 --Carreras de los usuario
 create or replace function CarrerasUsuarios () returns table (
-	idUsuario int, primerNombre varchar, apellidos varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
+	idUsuario int, primerNombre varchar, apellidos varchar, categoriaDeportista varchar, idCarrera int, nombreCarrera varchar, tipoActividad varchar,
 	fechaCarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
 as
 $$
-Select d.idUsuario, d.primerNombre, d.apellidos, uc.idCarrera, carr.nombreCarrera, carr.tipoActividad, carr.fechaCarrera,
+Select d.idUsuario, d.primerNombre, d.apellidos, d.categoria,uc.idCarrera, carr.nombreCarrera, carr.tipoActividad, carr.fechaCarrera,
 		uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
 from usuario d
 inner join usuariosCarrera as uc
@@ -537,7 +569,7 @@ create or replace function eliminarUsuarioGrupo (idUser integer, idGroup integer
 returns void
 as
 $$
-Delete from usuariosPorGrupo where idUsuario = idUser;
+Delete from usuariosPorGrupo where idUsuario = idUser and idGroup = idUsuario;
 $$
 Language sql
 
@@ -552,42 +584,33 @@ where idUsuario = idUser;
 $$
 Language sql
 
-select * from usuariosCarrera
-
 
 --lista de participantes en la carrera
 create or replace function participantesCarrera (idCarr integer)
-returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoria varchar)
+returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaDeportista varchar)
 as
 $$
-select cu.primerNombre, cu.apellidos, u.fechaNacimiento, cc.categoria from carrerasUsuarios() as cu
+select cu.primerNombre, cu.apellidos, u.edad, cu.categoriaDeportista from carrerasUsuarios() as cu
 inner join usuario as u
 on u.primerNombre = cu.primerNombre and u.apellidos = cu.apellidos
 inner join categoriaCarrera as cc
 on cc.idCarrera = cu.idCarrera
 where cu.idCarrera = idCarr
-order by cc.categoria
+order by cu.categoriaDeportista
 $$
 Language sql
-
+select * from carrerasUsuarios()
 
 --Ver posiciones de la carrera
 create or replace function posicionesCarrera (idCarr integer)
-returns table (NombreUsuario varchar, apellido varchar, edad varchar, tiempo varchar, categoria varchar)
+returns table (NombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaDeportista varchar, tiempo varchar)
 as
 $$
-Select d.PrimerNombre, d.Apellidos, edad, uc.tiempoRegistrado from usuario as d
-	Inner join usuariosCarrera as uc
-	on d.idUsuario = uc.idDeportista
-	where idCarr = uc.idCarrera
-	order by uc.TiempoRegistrado asc
+Select cu.PrimerNombre, cu.Apellidos, u.edad, cu.categoriaDeportista, cu.duracion from carrerasUsuarios() as cu
+	inner join usuario as u
+	on u.idUsuario = cu.idUsuario
+	where idCarr = cu.idCarrera
+	order by cu.duracion asc
 $$
 Language sql
-
-select * from participantesCarrera (1)
-
-select extract (year from age((select fechaNacimiento from usuario where primerNombre = 'Mario')))
-
-
-
 

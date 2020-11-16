@@ -103,7 +103,6 @@ create or replace function eliminarUsuarioID (iduser int)
 returns void
 as
 $$
-Delete from usuario where idusuario = iduser;
 Delete from actividadDeportista where iddeportista = iduser;
 Delete from usuariosPorGrupo where idusuario = iduser;
 Delete from amigosUsuario where iddeportista = iduser or idamigo = iduser;
@@ -112,6 +111,8 @@ Delete from solicitudesCarrera where idusuario = iduser;
 Delete from usuariosCarrera where iddeportista = iduser;
 Delete from Reto where idorganizador = iduser;
 Delete from usuariosReto where iddeportista = iduser;
+Delete from grupo where idadministrador = iduser;
+Delete from usuario where idusuario = iduser;
 $$
 Language sql
 
@@ -541,10 +542,10 @@ Language sql
 
 
 --Modificar un grupo
-create or replace function modificarGrupo (idgroup int, nombgrup varchar, idadmin integer) returns void
+create or replace function modificarGrupo (idgroup int, nombgrup varchar) returns void
 as
 $$
-Update Grupo set nombre = nombgrup, idadministrador = idadmin
+Update Grupo set nombre = nombgrup
 where idGrupo = idgroup;
 $$
 Language sql

@@ -1,5 +1,3 @@
---Creacion de la base de datos
---create database basedatosstraviatec;
 
 --Creacion de las tablas con sus llaves primarias
 create table usuario(
@@ -10,7 +8,9 @@ create table usuario(
 	apellidos text not null,
 	fechaNacimiento date not null,
 	nacionalidad text default 'No indica' ,
-	foto bytea	
+	foto bytea,
+	edad integer,
+	categoria varchar
 );
 
 create table AmigosUsuario(
@@ -88,6 +88,7 @@ create table solicitudesCarrera(
 create table usuariosCarrera (
 	idDeportista int not null,
 	idCarrera int not null,
+	categoriaCompite varchar default 'Elite',
 	tiempoRegistrado text,
 	kilometraje text,
 	altura text,
@@ -95,6 +96,7 @@ create table usuariosCarrera (
 	Recorrido xml,
 	primary key (idDeportista,idCarrera)
 );
+
 
 create table Reto(
 	idReto serial primary key not null,
@@ -163,6 +165,10 @@ alter table Carrera
 add constraint FK_organizadorCarrera
 foreign key (idOrganizador) references usuario (idUsuario);
 
+alter table Carrera
+add constraint UQ_nombreCarrera
+unique (nombreCarrera);
+
 --Tabla Reto
 alter table Reto
 add constraint FK_organizadorReto
@@ -171,4 +177,3 @@ foreign key (idOrganizador) references usuario (idUsuario);
 alter table Reto
 add constraint UQ_nombreUnico
 unique(nombreReto)
-

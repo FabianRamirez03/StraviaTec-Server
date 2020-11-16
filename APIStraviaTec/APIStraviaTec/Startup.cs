@@ -18,6 +18,12 @@ namespace APIStraviaTec
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+           
+        }
+
+        public static string getKey()
+        {
+            return "Server=127.0.0.1;User Id=postgres; " + "Password=admin;Database=basedatosstraviatec;";
         }
 
         public IConfiguration Configuration { get; }
@@ -59,5 +65,6 @@ namespace APIStraviaTec
                 endpoints.MapControllers();
             });
         }
+
     }
 }

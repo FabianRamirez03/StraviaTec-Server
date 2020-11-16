@@ -5,7 +5,7 @@ namespace APIStraviaTec.Models
 {
     public partial class Retosgrupo
     {
-        public string Nombregrupo { get; set; }
+        public int Idgrupo { get; set; }
         public int Idreto { get; set; }
     }
 }

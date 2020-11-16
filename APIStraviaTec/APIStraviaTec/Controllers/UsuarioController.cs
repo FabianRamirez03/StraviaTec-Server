@@ -19,7 +19,7 @@ namespace APIStraviaTec.Controllers
     [Route("[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private string serverKey = "Server=127.0.0.1;User Id=postgres; " + "Password=sarcu1209;Database=basedatosstraviatec;";
+        private string serverKey = Startup.getKey();
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -60,7 +60,7 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("buscarUsuarioId", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@usuarioid", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             try

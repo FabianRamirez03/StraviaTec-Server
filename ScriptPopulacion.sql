@@ -5,12 +5,13 @@ values ('mario123', '123','Mario','Araya','1999-03-02','costarricense');
 insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
 values ('wajo10', '123','Wajib','Zaglul','1999-04-02','costarricense');
 
+
 --Tabla de los amigos de los usuarios
 insert into AmigosUsuario values (1,2);
 insert into AmigosUsuario values (2,1);
 
 --Tabla Actividad
-insert into actividad(nombreActividad,fecha, hora,tipoActividad) 
+insert into actividad(nombreActividad,fecha,tipoActividad) 
 values ('Caminata Recreacional','2018-06-22 20:10:25','caminar');
 
 --Tabla ActividadDeportista
@@ -26,11 +27,10 @@ insert into UsuariosPorGrupo values ('2','1');
 
 --Tabla Carrera
 insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria)
-values ('1','Vuelta al Arenal','2016-06-22 19:10:25','Bicicleta',10500,'CR-5412378');
+values ('3','Vuelta al Arenal','2016-06-22 19:10:25','Bicicleta',10500,'CR-5412378');
 
 insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria,privada)
-values ('1','Palmarin','2020-06-22 19:10:25','Caminata',5000,'CR-5412378','True');
-
+values ('3','Palmarin','2020-06-22 19:10:25','Caminata',5000,'CR-5412378','True');
 --Tabla carrerasGrupo
 insert into CarrerasGrupo values ('1','4')
 
@@ -43,6 +43,9 @@ insert into usuariosCarrera (idDeportista,idcarrera) values ('2','3');
 insert into usuariosCarrera (idDeportista,idcarrera) values ('4','1');
 insert into usuariosCarrera (idDeportista,idcarrera) values ('4','5');
 
+insert into usuariosCarrera (idDeportista,idcarrera) values ('9','4');
+select * from carrera
+
 
 --Tabla categoriaCarrera
 insert into categoriaCarrera values ('1','Elite');
@@ -50,11 +53,11 @@ insert into categoriaCarrera values ('1','MasterA');
 
 --Tabla Reto
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('1','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
+values ('3','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('1','Fondo de 3 dias', '100km','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo');
+values ('3','Fondo de 3 dias', '100km','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo');
 insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto, privada)
-values ('1','Corrientes del Arenal','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
+values ('3','Corrientes del Arenal','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
 
 --Tabla carrerasGrupo
 insert into RetosGrupo values ('1','3')
@@ -81,4 +84,3 @@ insert into PatrocinadoresReto values ('1','Piros');
 
 --Tabla PatrocinadoresReto
 insert into PatrocinadoresCarrera values ('1','San Antonio');
-

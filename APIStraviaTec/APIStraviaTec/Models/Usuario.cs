@@ -20,6 +20,8 @@ namespace APIStraviaTec.Models
         public DateTime Fechanacimiento { get; set; }
         public string Nacionalidad { get; set; }
         public byte[] Foto { get; set; }
+        public int? Edad { get; set; }
+        public string Categoria { get; set; }
 
         public virtual ICollection<Carrera> Carrera { get; set; }
         public virtual ICollection<Grupo> Grupo { get; set; }

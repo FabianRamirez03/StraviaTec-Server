@@ -5,13 +5,12 @@ values ('mario123', '123','Mario','Araya','1999-03-02','costarricense');
 insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
 values ('wajo10', '123','Wajib','Zaglul','1999-04-02','costarricense');
 
-
 --Tabla de los amigos de los usuarios
 insert into AmigosUsuario values (1,2);
 insert into AmigosUsuario values (2,1);
 
 --Tabla Actividad
-insert into actividad(nombreActividad,fecha, hora,tipoActividad) 
+insert into actividad(nombreActividad,fecha,tipoActividad) 
 values ('Caminata Recreacional','2018-06-22 20:10:25','caminar');
 
 --Tabla ActividadDeportista

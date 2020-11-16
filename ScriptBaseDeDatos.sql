@@ -1,5 +1,5 @@
 --Creacion de la base de datos
---create database prueba;
+Create database basedatosstraviatec;
 
 --Creacion de las tablas con sus llaves primarias
 create table usuario(
@@ -14,6 +14,7 @@ create table usuario(
 	edad integer,
 	categoria varchar
 );
+
 
 create table AmigosUsuario(
 	idDeportista int not null,
@@ -112,6 +113,7 @@ create table Reto(
 	privada boolean default 'False'
 );
 
+
 create table usuariosReto (
 	idDeportista int not null,
 	idReto int not null,
@@ -151,6 +153,7 @@ create table PatrocinadoresCarrera(
 alter table usuario
 add constraint UQ_nombreUsuario
 unique (NombreUsuario)
+
 
 --Tabla Grupo
 alter table Grupo 

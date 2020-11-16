@@ -34,10 +34,11 @@ create table ActividadDeportista(
 	idDeportista int not null,
 	kilometraje text,
 	altura text,
-	recorrido xml,
+	recorrido text,
 	duracion text,
 	primary key (idActividad,idDeportista)
 );
+
 
 create table Grupo(
 	idGrupo serial primary key not null,
@@ -69,11 +70,12 @@ create table Carrera(
 	nombreCarrera text not null,
 	fechaCarrera timestamp not null,
 	TipoActividad text not null,
-	recorrido xml,
+	recorrido text,
 	privada boolean default 'False',
 	costo int not null,
 	cuentaBancaria text not null
 );
+
 
 create table categoriaCarrera(
 	idCarrera int not null,
@@ -96,7 +98,7 @@ create table usuariosCarrera (
 	kilometraje text,
 	altura text,
 	completitud boolean default 'False',
-	Recorrido xml,
+	Recorrido text,
 	primary key (idDeportista,idCarrera)
 );
 
@@ -121,9 +123,10 @@ create table usuariosReto (
 	kilometraje text,
 	altura text,
 	completitud boolean default 'False',
-	Recorrido xml,
+	Recorrido text,
 	primary key (idDeportista,idReto)
 );
+
 
 --Tabla Constante
 create table Patrocinador(

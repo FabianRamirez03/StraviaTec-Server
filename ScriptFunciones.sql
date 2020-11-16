@@ -137,8 +137,9 @@ Language sql
 
 
 --Actividades de los usuarios
-create or replace function actividadesUsuarios () returns table (
-	idusuario int, primernombre varchar, idactividad int, nombreActividad varchar, tipoactividad varchar, fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido xml)
+create or replace function actividadesUsuarios () returns table
+(idusuario int, primernombre varchar, idactividad int, nombreActividad varchar, tipoactividad varchar,
+ fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, ad.idactividad, act.nombreActividad, act.tipoactividad, act.fecha, ad.kilometraje, ad.altura, ad.duracion, ad.recorrido
@@ -153,8 +154,9 @@ Language sql
 
 
 --Actividad por id de usuario
-create or replace function actividadPorUsuario (iduser int) returns table (
-	idusuario int, primernombre varchar, idactividad int, nombreActividad varchar,tipoactividad varchar, fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido xml)
+create or replace function actividadPorUsuario (iduser int) returns table 
+(idusuario int, primernombre varchar, idactividad int, nombreActividad varchar,tipoactividad varchar,
+ fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, ad.idactividad, act.nombreActividad, act.tipoactividad, act.fecha, ad.kilometraje, ad.altura, ad.duracion, ad.recorrido
@@ -167,6 +169,7 @@ inner join actividadDeportista ad
 $$
 Language sql
 
+
 --Obtener el id de una carrera a partir de su nombre
 create or replace function obteneridcarrera(nombrecarr varchar) returns integer
 as
@@ -178,7 +181,8 @@ Language sql
 
 --Crear carrera
 create or replace function crearCarrera (
-	idorga int, nombcarr varchar, fechaevento timestamp, tipocarrera varchar, carreracategoria varchar, recorridocarrera xml, privacidad boolean, precio int, cuentabanc varchar) 
+	idorga int, nombcarr varchar, fechaevento timestamp, tipocarrera varchar, carreracategoria varchar, recorridocarrera varchar,
+	privacidad boolean, precio int, cuentabanc varchar) 
 	returns void
 	as
 	$$
@@ -203,7 +207,7 @@ Language sql
 
 --Modificar carrera
 create or replace function modificarCarrera (
-	idcarr int, idorg int, nomcarr varchar, fechcarr timestamp, tipact varchar, ruta xml, privacidad boolean, precio int, cuenta varchar)
+	idcarr int, idorg int, nomcarr varchar, fechcarr timestamp, tipact varchar, ruta varchar, privacidad boolean, precio int, cuenta varchar)
 	returns void
 	as
 	$$
@@ -272,7 +276,7 @@ Language sql
 --Carreras de los usuario
 create or replace function CarrerasUsuarios () returns table (
 	idusuario int, primernombre varchar, apellidos varchar, categoriadeportista varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-	fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
+	fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, d.apellidos, d.categoria,uc.idcarrera, carr.nombrecarrera, carr.tipoactividad, carr.fechacarrera,
@@ -289,7 +293,7 @@ Language sql
 
 --Actualizar datos de un usuario en una carrera
 create or replace function actualizarDatosCarreraUsuario 
-(iduser int, idcarr int, distancia varchar, alt varchar, tiempo varchar, completado boolean, mapa xml)
+(iduser int, idcarr int, distancia varchar, alt varchar, tiempo varchar, completado boolean, mapa varchar)
 returns void
 as
 $$
@@ -349,7 +353,7 @@ Language sql
 create or replace function RetosUsuarios () returns table (
 	idusuario int, primernombre varchar, idreto int, nombreReto varchar, objetivoReto varchar, tipoactividad varchar,
 	tiporeto varchar, fechainicio timestamp, fechafinaliza timestamp, kilometraje varchar, altura varchar,
-	duracion varchar, completitud boolean, recorrido xml)
+	duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, ur.idreto, ret.nombreReto, ret.objetivoReto ,ret.tipoactividad, ret.tiporeto, 
@@ -377,7 +381,7 @@ Language sql
 -- Ver actividades de los amigos del deportista 
 create or replace function actividadesAmigos (iduser int)
 returns table (nombreAmigo varchar, nombreActividad varchar, tipoactividad varchar,
-			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido xml)
+			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
@@ -393,7 +397,7 @@ Language sql
 -- Ver retos de los amigos del deportista
 create or replace function retosAmigos (iduser int)
 returns table (nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,
-			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido xml)
+			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
@@ -409,7 +413,7 @@ Language sql
 --Ver carreras de los amigos del deportista
 create or replace function carrerasAmigos (iduser int)
 returns table (nombreAmigo varchar, nombrecarrera varchar, tipoactividad varchar,
-			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido xml)
+			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
@@ -469,7 +473,7 @@ Language sql
 
 --Actualizar reto
 create or replace function actualizarDatosRetoUsuario 
-(idret integer, iduser integer,tiempo varchar, distancia varchar, alt varchar, completado boolean, mapa xml ) returns void
+(idret integer, iduser integer,tiempo varchar, distancia varchar, alt varchar, completado boolean, mapa varchar ) returns void
 as
 $$
 Update usuariosReto set kilometraje = distancia, duracion = tiempo, altura = alt, completitud = completado, recorrido = mapa
@@ -509,7 +513,7 @@ Language sql
 --Buscar retos por usuario
 create or replace function retosPorUsuario (iduser integer) 
 returns table (idusuario int, NombreUsuario varchar, idreto integer, nombreReto varchar, objetivoReto varchar, tipoactividad varchar, tiporeto varchar,
-			   fechainicio timestamp, fechafinaliza timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
+			   fechainicio timestamp, fechafinaliza timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 select * from retosUsuarios()
@@ -595,14 +599,14 @@ Language sql
 --Ver carreras por usuario
 create or replace function buscarCarrerasPorUsuaio (iduser integer)
 returns table (idusuario int, primernombre varchar, apellidos varchar, categoriadeportista varchar,idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-				fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido xml)
+				fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 select * from carrerasUsuarios() 
 where idusuario = iduser;
 $$
 Language sql
-select buscarCarrerasPorUsuaio(2)
+
 
 
 --lista de participantes en la carrera

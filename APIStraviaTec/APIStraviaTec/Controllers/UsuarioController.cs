@@ -276,7 +276,26 @@ namespace APIStraviaTec.Controllers
             return Usuarioret;
         }
 
-
+        [Route("agregarAmigo")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Usuario> PostagregarAmigo([FromBody] Amigosusuario usuario)
+        {
+            List<Usuario> Usuarioret = new List<Usuario>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("eagregarAmigo", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Iddeportista);
+            command.Parameters.AddWithValue("@idamigo", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idamigo);
+            // Execute the query and obtain a result set
+            command.ExecuteNonQuery();
+            Debug.WriteLine("Amigo agragado exitosamente");
+            conn.Close();
+            return Usuarioret;
+        }
 
     }  
 }

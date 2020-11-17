@@ -14,6 +14,7 @@ namespace APIStraviaTec.Models
         public bool? Privada { get; set; }
         public int Costo { get; set; }
         public string Cuentabancaria { get; set; }
+        public string Categoria { get; set; }
 
         public virtual Usuario IdorganizadorNavigation { get; set; }
     }

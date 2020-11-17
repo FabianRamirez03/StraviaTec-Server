@@ -20,24 +20,7 @@ namespace APIStraviaTec.Controllers
     public class ActividadController : ControllerBase
     {
         private string serverKey = Startup.getKey();
-        [Route("addUser")]
-        [EnableCors("AnotherPolicy")]
-        [HttpPost]
-        public void agregarUsuario([FromBody] Actividaddeportista user)
-        {
-            //Connect to a PostgreSQL database
-            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
-            conn.Open();
-            // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("agregarUsuarioActividad", conn);
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Integer, user.Iddeportista);
-            command.Parameters.AddWithValue("@idactiv", NpgsqlTypes.NpgsqlDbType.Integer, user.Idactividad);
-            // Execute the query and obtain a result set
-            NpgsqlDataReader dr = command.ExecuteReader();
-            conn.Close();
-            return;
-        }
+       
         [Route("deleteActivity")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -77,7 +60,7 @@ namespace APIStraviaTec.Controllers
         [Route("addActivity")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public void agregarGrupo([FromBody] Actividad actividad)
+        public void agregarActividad([FromBody] Actividad actividad)
         {
             //Connect to a PostgreSQL database
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);

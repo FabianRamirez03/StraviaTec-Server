@@ -130,12 +130,22 @@ Language sql
 
 
 --*************************ACTIVIDAD*************************
+
 --Crear actividad 
 create or replace function crearActividad (nombre varchar, fechaact timestamp, tipo varchar) returns void
 as
 $$
 insert into actividad (nombreactividad, fecha, tipoactividad) 
 values (nombre, fechaact, tipo);
+$$
+Language sql
+
+
+--Agregar un deportista a una actividad
+create or replace function agregarUsuarioActividad (iddep integer, idactiv integer) returns void
+as
+$$
+insert into actividadDeportista (idactividad,iddeportista) values (idactiv, iddep);
 $$
 Language sql
 
@@ -157,15 +167,6 @@ as
 $$
 Delete from Actividad where idactividad = idact;
 Delete from ActividadDeportista where idactividad = idact
-$$
-Language sql
-
-
---Agregar un deportista a una actividad
-create or replace function agregarUsuarioActividad (iddep integer, idactiv integer) returns void
-as
-$$
-insert into actividadDeportista (idactividad,iddeportista) values (idactiv, iddep);
 $$
 Language sql
 

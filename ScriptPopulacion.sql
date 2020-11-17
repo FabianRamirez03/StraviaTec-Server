@@ -1,19 +1,27 @@
 --Llenado de las tablas constantes
 --Tabla Usuarios
-insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
-values ('mario123', '123','Mario','Araya','1999-03-02','costarricense');
-insert into usuario (nombreUsuario,contrasena, primerNombre, apellidos, fechaNacimiento, nacionalidad) 
-values ('wajo10', '123','Wajib','Zaglul','1999-04-02','costarricense');
+select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costarricense', bytea('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/08/06/15967015067257.jpg'))
+select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
+select crearUsuario('charlie', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
+select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'))
 
+select * from usuario
 --Tabla de los amigos de los usuarios
-insert into AmigosUsuario values (1,2);
-insert into AmigosUsuario values (2,1);
+select agregarAmigo('1','2');
+select agregarAmigo('1','3');
+select agregarAmigo('1','4');
+select agregarAmigo('2','1');
+select agregarAmigo('2','4');
+select agregarAmigo('4','3');
+select agregarAmigo('3','4');
 
 --Tabla Actividad
+select crearActividad ('Vueltas al plano', '2020-11-16','Correr');
 insert into actividad(nombreActividad,fecha,tipoActividad) 
 values ('Caminata Recreacional','2018-06-22 20:10:25','caminar');
 
 --Tabla ActividadDeportista
+
 insert into ActividadDeportista (idActividad,idDeportista) values ('1','1');
 insert into ActividadDeportista (idActividad,idDeportista) values ('2','1');
 

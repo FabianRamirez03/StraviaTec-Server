@@ -1,4 +1,5 @@
 --Creacion de funciones
+
 --*************************USUARIO*************************
 --Crear un usuario
 CREATE OR REPLACE FUNCTION crearUsuario (username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar, imagen bytea) RETURNS void AS $$
@@ -37,6 +38,7 @@ select * from usuario where Upper(nombreusuario) like Upper(username)
 $$
 Language sql
 
+
 --****************
 /*
 CREATE OR REPLACE FUNCTION  buscarUsuariousername (username varchar) RETURNS usuario AS $$
@@ -63,6 +65,7 @@ where  Upper(primernombre) like Upper(nombre);
 $$
 Language sql
 
+select * from usuario
 
 
 --Buscar usuario por nombre y apellido
@@ -259,6 +262,17 @@ as
 $$
 Delete from Actividad where idactividad = idact;
 Delete from ActividadDeportista where idactividad = idact
+$$
+Language sql
+
+
+--Actualizar datos de una actividad 
+create or replace function actualizarDatosActividadUsuario(idact integer, iddep integer, dist varchar, alt varchar, tiempo varchar, mapa varchar) 
+returns void
+as
+$$
+Update actividadDeportista set kilometraje = dist, altura = alt, duracion = tiempo, recorrido = mapa
+where idActividad = idact and idDeportista = iddep;
 $$
 Language sql
 

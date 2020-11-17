@@ -14,7 +14,7 @@ values ('On Wheels', 'Pedro Perico', '24472525');
 --Creacion de usuarios
 select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costarricense', bytea('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/08/06/15967015067257.jpg'));
 select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'));
-select crearUsuario('charlie', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'));
+select crearUsuario('pedro123', 'pedro123','Pedro','Perico','1995-05-04','Los Palotes', bytea('https://www.bestfunnies.com/wp-content/uploads/2015/05/Funny-Cyclist-22.jpg'));
 select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'));
 
 

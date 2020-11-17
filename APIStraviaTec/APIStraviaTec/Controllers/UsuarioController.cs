@@ -275,8 +275,190 @@ namespace APIStraviaTec.Controllers
             conn.Close();
             return Usuarioret;
         }
+        [Route("friendsActivity")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        
+        public List<object> actividadesAmigos(Usuario usuario)
+        {
+            List<Object> Actividad = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("TodasActividadesAmigos", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombreAmigo = dr[0].ToString(),
+                            actividad = dr[1].ToString(),
+                            tipo = dr[2].ToString(),
+                            fecha = (DateTime) dr[3],
+                            mapa = dr[4].ToString(),
+                            kilometros = dr[5].ToString()
+                        }
 
+                     };
+                    Console.WriteLine(jsons);
+                    Actividad.Add(jsons);
 
+                }
 
+            }
+            catch
+            {
+                Debug.WriteLine("Carrera no encontrada");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < Actividad.Count; x++)
+            {
+                var tempList = (IList<object>)Actividad[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
+        [Route("friendsCarreras")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+
+        public List<object> carrerasAmigos(Usuario usuario)
+        {
+            List<Object> Actividad = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("carrerasAmigos", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombreAmigo = dr[0].ToString(),
+                            actividad = dr[1].ToString(),
+                            tipo = dr[2].ToString(),
+                            fecha = (DateTime) dr[3],
+                            kilometros = dr[4].ToString(),
+                            altura = dr[5].ToString(),
+                            duracion = dr[6].ToString(),
+                            mapa = dr[7].ToString(),
+                            
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    Actividad.Add(jsons);
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Carrera no encontrada");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < Actividad.Count; x++)
+            {
+                var tempList = (IList<object>)Actividad[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+        [Route("friendsRetos")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+
+        public List<object> retosAmigos(Usuario usuario)
+        {
+            List<Object> Actividad = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("retosAmigos", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombreAmigo = dr[0].ToString(),
+                            reto = dr[1].ToString(),
+                            tipoReto = dr[2].ToString(),
+                            tipoActividad = dr[3].ToString(),
+                            fecha = (DateTime) dr[4],
+                            kilometros = dr[5].ToString(),
+                            altura = dr[6].ToString(),
+                            duracion = dr[7].ToString(),
+                            mapa = dr[8].ToString(),
+
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    Actividad.Add(jsons);
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Carrera no encontrada");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < Actividad.Count; x++)
+            {
+                var tempList = (IList<object>)Actividad[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
+        [Route("validarUser")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public Object validarUsuario(Usuario usuario)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("validacionDeUsuario", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Text, usuario.Nombreusuario);
+            command.Parameters.AddWithValue("@clave", NpgsqlTypes.NpgsqlDbType.Text, usuario.Contrasena);
+            bool resp = (Boolean) command.ExecuteScalar();
+            var jsons = new[]
+                    {
+                        new {validacion = resp }
+            };
+
+            return jsons[0];
+        }
     }  
 }

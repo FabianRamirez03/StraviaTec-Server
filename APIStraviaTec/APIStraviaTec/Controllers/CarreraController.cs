@@ -16,7 +16,7 @@ namespace APIStraviaTec.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UsuariosCarreraController : ControllerBase
+    public class CarreraController : ControllerBase
     {
         private string serverKey = Startup.getKey();
         [Route("participantesCarrera")]
@@ -125,7 +125,31 @@ namespace APIStraviaTec.Controllers
 
             }
             conn.Close();
-            return CarrerasUser;
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < CarrerasUser.Count; x++)
+            {
+                var tempList = (IList<object>)CarrerasUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+        [Route("deleteUser")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public void eliminarUsuarioCarrera([FromBody] Usuarioscarrera user)
+        {
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("eliminarUsuarioCarrera", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Integer, user.Iddeportista);
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, user.Idcarrera);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            conn.Close();
+            return;
         }
 
         [Route("posicionesCarrera")]
@@ -181,6 +205,26 @@ namespace APIStraviaTec.Controllers
             }
             return retornar;
         }
-
+        [Route("updateUserCarrera")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public void actualizarDatosCarreraUsuario(Usuarioscarrera reto)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("actualizarDatosCarreraUsuario", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, reto.Iddeportista);
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, reto.Idcarrera);
+            command.Parameters.AddWithValue("@distancia", NpgsqlTypes.NpgsqlDbType.Text, reto.Kilometraje);
+            command.Parameters.AddWithValue("@alt", NpgsqlTypes.NpgsqlDbType.Text, reto.Altura);
+            command.Parameters.AddWithValue("@tiempo", NpgsqlTypes.NpgsqlDbType.Text, reto.Tiemporegistrado);
+            command.Parameters.AddWithValue("@completado", NpgsqlTypes.NpgsqlDbType.Boolean, reto.Completitud);
+            command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Text, reto.Recorrido);
+            NpgsqlDataReader dr = command.ExecuteReader();
+            conn.Close();
+            return;
+        }
     }
 }

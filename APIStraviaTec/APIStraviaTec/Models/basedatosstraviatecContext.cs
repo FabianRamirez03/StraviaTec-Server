@@ -20,7 +20,6 @@ namespace APIStraviaTec.Models
         public virtual DbSet<Amigosusuario> Amigosusuario { get; set; }
         public virtual DbSet<Carrera> Carrera { get; set; }
         public virtual DbSet<Carrerasgrupo> Carrerasgrupo { get; set; }
-        public virtual DbSet<Categoriacarrera> Categoriacarrera { get; set; }
         public virtual DbSet<Grupo> Grupo { get; set; }
         public virtual DbSet<Patrocinador> Patrocinador { get; set; }
         public virtual DbSet<Patrocinadorescarrera> Patrocinadorescarrera { get; set; }
@@ -154,18 +153,6 @@ namespace APIStraviaTec.Models
                 entity.Property(e => e.Idgrupo).HasColumnName("idgrupo");
 
                 entity.Property(e => e.Idcarrera).HasColumnName("idcarrera");
-            });
-
-            modelBuilder.Entity<Categoriacarrera>(entity =>
-            {
-                entity.HasKey(e => new { e.Idcarrera, e.Categoria })
-                    .HasName("categoriacarrera_pkey");
-
-                entity.ToTable("categoriacarrera");
-
-                entity.Property(e => e.Idcarrera).HasColumnName("idcarrera");
-
-                entity.Property(e => e.Categoria).HasColumnName("categoria");
             });
 
             modelBuilder.Entity<Grupo>(entity =>

@@ -240,7 +240,7 @@ values (nombre, fechaact, tipo);
 insert into actividadDeportista (idactividad, iddeportista) values ((select idactividad from buscaractividadnombre(nombre)), iddep );
 $$
 Language sql
-
+select * from actividadDeportista
 
 --Modificar el nombre de una Actividad
 create or replace function modificarActividad (idact integer, nombre varchar) returns void
@@ -452,10 +452,12 @@ Language sql
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer) returns void
 as
 $$
-declare usAgregar usuario := buscarUsuarioId(iddep);
-		catCarr categoriaCarrera := buscarCategoriaCarrera(idcarr);
+declare usAgregar varchar := (select categoria from buscarUsuarioId(iddep));
+		catCarr varchar := buscarCategoriaCarrera(idcarr);
 Begin
-	if catCarr = usAgregar.categoria or catCarr = 'Elite' then 
+	if catCarr = usAgregar then 
+		insert into usuariosCarrera (iddeportista,idcarrera, categoriacompite) values (iddep, idcarr, catCarr);
+	elseif catCarr = 'Elite' then
 		insert into usuariosCarrera (iddeportista,idcarrera) values (iddep, idcarr);
 	else
 		raise notice 'No coincide la categoria';
@@ -463,11 +465,13 @@ Begin
 End
 $$
 Language plpgsql
-select agregarUsuarioCarrera ()
+
+delete from usuario
+select agregarUsuarioCarrera ('14','1')
+select * from usuariosCarrera
 select * from usuario --11, 14
-select * from carrera --
+select * from carrera -- 1
 select * from categoriaCarrera
-delete 
 
 
 --Eliminar un usuario de una carrera
@@ -613,6 +617,18 @@ $$
 Language sql
 
 
+--Agregar patrocinador a una reto, valida que exista el patrocinador
+create or replace function agregarPatrocinadorReto (idret int, nombrepatrocinador varchar)
+	returns void
+	as
+	$$
+	insert into PatrocinadoresReto (idReto, nombreComercial)
+	select idret, nombrepatrocinador
+	where exists (select 1 from Patrocinador where nombreComercial = nombrepatrocinador);
+	$$
+Language sql
+
+
 --Agregar usuario a un reto
 create or replace function agregarUsuarioReto(iddep integer, idret integer) returns void
 as
@@ -643,7 +659,6 @@ $$
 Language sql
 
 
-
 --Actualizar los datos del reto segun del usuario
 create or replace function actualizarDatosRetoUsuario 
 (idret integer, iduser integer,tiempo varchar, distancia varchar, alt varchar, completado boolean, mapa varchar ) returns void
@@ -655,7 +670,7 @@ $$
 Language sql
 
 
---Retos de los usuarios
+--Retos de todos los usuarios
 create or replace function RetosUsuarios () returns table (
 	idusuario int, primernombre varchar, idreto int, nombreReto varchar, objetivoReto varchar, tipoactividad varchar,
 	tiporeto varchar, fechainicio timestamp, fechafinaliza timestamp, kilometraje varchar, altura varchar,

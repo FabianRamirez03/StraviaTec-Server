@@ -12,10 +12,10 @@ insert into Patrocinador(nombreComercial, representante, numeroTelefono)
 values ('On Wheels', 'Pedro Perico', '24472525');
 
 --Creacion de usuarios
-select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costarricense', bytea('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/08/06/15967015067257.jpg'))
-select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
-select crearUsuario('charlie', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
-select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'))
+select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costarricense', bytea('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/08/06/15967015067257.jpg'));
+select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'));
+select crearUsuario('charlie', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'));
+select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'));
 
 
 --Agregar amigos entre usuario
@@ -26,6 +26,7 @@ select agregarAmigo('2','1');
 select agregarAmigo('2','4');
 select agregarAmigo('4','3');
 select agregarAmigo('3','4');
+
 
 --Creacion de actividades y asignacion al usuario segun su id
 select crearActividad (2,'Vueltas al plano', '2020-11-16','Correr');
@@ -60,36 +61,34 @@ select agregarCarreraGrupo (1,1)
 select enviarSolicitudCarrera(1,2,bytea('https://www.nwcu.com/storage/app/media/Check-Image-Example.jpg'));
 
 
---Agregar usuarios a la carrera
-select agregarUsuarioCarrera
-
-insert into usuariosCarrera (idDeportista,idcarrera) values ('9','4');
-select * from carrera
-
-
---Tabla categoriaCarrera
-insert into categoriaCarrera values ('1','Elite');
-insert into categoriaCarrera values ('1','MasterA');
-
---Tabla Reto
-insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('1','2000 metros de ascenso','Mejorar el rendimiento','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud');
-insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto)
-values ('1','Fondo de 3 dias', '100km','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo');
-insert into Reto (idOrganizador,nombreReto,objetivoReto,fechaInicio,fechaFinaliza,tipoActividad,tipoReto, privada)
-values ('1','Corrientes del Arenal','5km','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
-
---Tabla carrerasGrupo
-insert into RetosGrupo values ('1','3')
-
---Tabla usuariosReto
-insert into usuariosReto (idDeportista,idReto) values ('2','1');
-insert into usuariosReto (idDeportista,idReto) values ('4','3');
+--Agregar usuarios a la carrera por el id del deportista y el id de la carrera
+select agregarUsuarioCarrera (1,1);
+select agregarUsuarioCarrera (2,1); --Este no lo agrega porque no coincide la categoria
+select agregarUsuarioCarrera (4,1);
 
 
---Tabla PatrocinadoresReto
-insert into PatrocinadoresReto values ('1','Piros');
+--Crear reto 
+select crearReto ('1','2000 metros de ascenso','2','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud','false');
+select crearReto ('1','100Km en 3 dias', '100','2020-10-20 7:00:00','2020-10-23 7:00:00','Ciclismo','fondo','false');
+select crearReto ('1','Corrientes del Arenal','5','2021-06-22 7:00:00','2021-06-22 9:00:00','Kayak','Fondo','True');
 
---Tabla PatrocinadoresReto
-insert into PatrocinadoresCarrera values ('1','San Antonio');
+
+--Agregar un reto privado a un grupo por id del grupo y id del reto
+select agregarRetoGrupo(1,3);
+
+
+--Agregar un usuario a un reto por el id del deportista y el id del reto
+select agregarUsuarioReto (3,1);
+select agregarUsuarioReto (2,1)
+select agregarUsuarioReto (4,2);
+select agregarUsuarioReto (2,2);
+
+
+--Agregar patrocinadores a un reto por el id del reto y el nombre del patrocinador
+select agregarPatrocinadorReto(1,'Piros')
+select agregarPatrocinadorReto(2,'San Antonio')
+select agregarPatrocinadorReto(2,'On wheels')
+
+
+
 

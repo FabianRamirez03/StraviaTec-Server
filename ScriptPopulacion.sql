@@ -1,12 +1,24 @@
---Llenado de las tablas constantes
---Tabla Usuarios
+--Llenado de la tabla constante
+--Tabla de Patrocinadores 
+insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
+values ('Piros', 'Julio Vargas', '22655331');
+insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
+values ('Treck', 'Richard Burke', '18005858735');
+insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
+values ('San Antonio', 'Jorge Zaglul', '24455190');
+insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
+values ('Gatorade', 'Robert Cade', '24376700');
+insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
+values ('On Wheels', 'Pedro Perico', '24472525');
+
+--Creacion de usuarios
 select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costarricense', bytea('https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/08/06/15967015067257.jpg'))
 select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
 select crearUsuario('charlie', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'))
 select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'))
 
-select * from usuario
---Tabla de los amigos de los usuarios
+
+--Agregar amigos entre usuario
 select agregarAmigo('1','2');
 select agregarAmigo('1','3');
 select agregarAmigo('1','4');
@@ -15,41 +27,41 @@ select agregarAmigo('2','4');
 select agregarAmigo('4','3');
 select agregarAmigo('3','4');
 
---Tabla Actividad
-select crearActividad ('Vueltas al plano', '2020-11-16','Correr');
-insert into actividad(nombreActividad,fecha,tipoActividad) 
-values ('Caminata Recreacional','2018-06-22 20:10:25','caminar');
+--Creacion de actividades y asignacion al usuario segun su id
+select crearActividad (2,'Vueltas al plano', '2020-11-16','Correr');
+select crearActividad (3,'cruzar el arenal', '2020-5-4','Kayak');
 
---Tabla ActividadDeportista
 
-insert into ActividadDeportista (idActividad,idDeportista) values ('1','1');
-insert into ActividadDeportista (idActividad,idDeportista) values ('2','1');
+--Creacion de un grupo y asignacion de su administrador
+select crearGrupo ('Moncho Bikers','1')
 
---Tabla grupo
-insert into Grupo(nombre,idAdministrador) values ('Moncho Bikers','1');
 
---Tabla UsuariosPorGrupo
-insert into UsuariosPorGrupo values ('1','1');
-insert into UsuariosPorGrupo values ('2','1');
+--Agregar usuarios al grupo por el id del usuario y el id del grupo
+select agregarUsuarioGrupo ('2','1');
+select agregarUsuarioGrupo ('3','1');
 
---Tabla Carrera
-insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria)
-values ('1','Vuelta al Arenal','2016-06-22 19:10:25','Bicicleta',10500,'CR-5412378');
 
-insert into Carrera (idorganizador,nombrecarrera,fechacarrera,tipoactividad,costo,cuentabancaria,privada)
-values ('1','Palmarin','2020-06-22 19:10:25','Caminata',5000,'CR-5412378','True');
+--Crear una carrera
+select crearCarrera ('1','Vuelta al Arenal','2020-11-22 8:00:00','Bicicleta','Master-A','<xml><xml>', 'false', 10500,'CR-5412378');
+select crearCarrera ('1','Palmarin','2020-06-22 11:30:00','Caminata','Sub-23','<xml><xml>', 'true',5000,'CR-5412378');
 
---Tabla carrerasGrupo
-insert into CarrerasGrupo values ('1','4')
 
---Tabla solicitudesCarrera
-insert into solicitudesCarrera (idCarrera,idUsuario) values (1,4);
+--Agregar patrocinadores a la carrera
+select agregarPatrocinadorCarrera (1,'Piros');
+select agregarPatrocinadorCarrera (1,'Treck');
+select agregarPatrocinadorCarrera (2,'Gatorade');
 
---Tabla UsuariosCarrera
-insert into usuariosCarrera (idDeportista,idcarrera) values ('2','1');
-insert into usuariosCarrera (idDeportista,idcarrera) values ('2','3');
-insert into usuariosCarrera (idDeportista,idcarrera) values ('4','1');
-insert into usuariosCarrera (idDeportista,idcarrera) values ('4','5');
+
+--Asignacion de una carrera privada a un grupo por id del grupo y id de la carrera
+select agregarCarreraGrupo (1,1)
+
+
+--Enviar solicitud de afiliacion a una carrera con idCarrera, idUsuario y foto del recibo
+select enviarSolicitudCarrera(1,2,bytea('https://www.nwcu.com/storage/app/media/Check-Image-Example.jpg'));
+
+
+--Agregar usuarios a la carrera
+select agregarUsuarioCarrera
 
 insert into usuariosCarrera (idDeportista,idcarrera) values ('9','4');
 select * from carrera
@@ -74,18 +86,6 @@ insert into RetosGrupo values ('1','3')
 insert into usuariosReto (idDeportista,idReto) values ('2','1');
 insert into usuariosReto (idDeportista,idReto) values ('4','3');
 
-
---Tabla de Patrocinadores 
-insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
-values ('Piros', 'Julio Vargas', '22655331');
-insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
-values ('Treck', 'Richard Burke', '18005858735');
-insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
-values ('San Antonio', 'Jorge Zaglul', '24455190');
-insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
-values ('Gatorade', 'Robert Cade', '24376700');
-insert into Patrocinador(nombreComercial, representante, numeroTelefono) 
-values ('On Wheels', 'Pedro Perico', '24472525');
 
 --Tabla PatrocinadoresReto
 insert into PatrocinadoresReto values ('1','Piros');

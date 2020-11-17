@@ -129,23 +129,115 @@ Language sql
 
 
 
---*************************ACTIVIDAD*************************
+--*************************GRUPO*************************
 
---Crear actividad 
-create or replace function crearActividad (nombre varchar, fechaact timestamp, tipo varchar) returns void
+--Crear un grupo y asignar el administrador
+create or replace function crearGrupo (nombgrup varchar, idadmin integer) returns void
 as
 $$
-insert into actividad (nombreactividad, fecha, tipoactividad) 
-values (nombre, fechaact, tipo);
+insert into Grupo (nombre,idadministrador) values (nombgrup, idadmin);
+insert into usuariosPorGrupo (idusuario, idgrupo) values (idadmin, (select idgrupo from buscarGrupoNombre(nombgrup)) );
 $$
 Language sql
 
 
---Agregar un deportista a una actividad
-create or replace function agregarUsuarioActividad (iddep integer, idactiv integer) returns void
+--Buscar grupo por nombre
+create or replace function buscarGrupoNombre (nombregrupo varchar) returns grupo
 as
 $$
-insert into actividadDeportista (idactividad,iddeportista) values (idactiv, iddep);
+select * from grupo where nombre = nombregrupo;
+$$
+Language sql
+
+
+
+--Modificar un grupo
+create or replace function modificarGrupo (idgroup int, nombgrup varchar) returns void
+as
+$$
+Update Grupo set nombre = nombgrup
+where idGrupo = idgroup;
+$$
+Language sql
+
+
+--Eliminar un grupo
+create or replace function EliminarGrupo (idgroup int) returns void
+as
+$$
+Delete from Grupo where idGrupo = idgroup;
+Delete from UsuariosPorGrupo where idGrupo = idgroup;
+Delete from RetosGrupo where idGrupo = idgroup;
+Delete from CarrerasGrupo where idGrupo = idgroup;
+$$
+Language sql
+
+
+--Agregar usuario a un grupo por el id del usuario y el id del grupo
+create or replace function agregarUsuarioGrupo (iduser integer, idgroup integer)
+returns void
+as
+$$
+insert into usuariosPorGrupo (idusuario, idGrupo) values (iduser, idgroup);
+$$
+Language sql
+
+
+--Eliminar usuario de un grupo
+create or replace function eliminarUsuarioGrupo (iduser integer, idgroup integer)
+returns void
+as
+$$
+Delete from usuariosPorGrupo where idusuario = iduser and idgroup = idusuario;
+$$
+Language sql
+
+
+--Ver usuarios de un grupo en especifico
+create or replace function usuariosGrupo (idgroup integer)
+returns table (NombreGrupo varchar, idusuario integer, NombreUsuario varchar, ApellidosUsuario varchar)
+as
+$$
+Select gr.Nombre, u.idusuario, u.primernombre, u.Apellidos
+	from usuario as u
+	inner join usuariosPorGrupo as ug
+	on u.idusuario = ug.idusuario
+		inner join Grupo as gr
+		on gr.idgrupo = ug.idgrupo
+		where idgroup = gr.idGrupo
+$$
+Language sql
+
+
+--Agregar carreras a un grupo
+create or replace function agregarCarreraGrupo (idgroup integer, idcarr integer) returns void
+as 
+$$
+insert into CarrerasGrupo (idGrupo, idCarrera) values (idgroup, idcarr);
+$$
+Language sql
+
+
+--Agregar retos a un grupo
+create or replace function agregarRetoGrupo (idgroup integer, idret integer) returns void
+as 
+$$
+insert into RetosGrupo (idGrupo, idReto) values (idgroup, idret);
+$$
+Language sql
+--*************************GRUPO*************************
+
+
+
+--*************************ACTIVIDAD*************************
+
+--Crear actividad 
+create or replace function crearActividad (iddep integer, nombre varchar, fechaact timestamp, tipo varchar) returns void
+as
+$$
+insert into actividad (nombreactividad, fecha, tipoactividad) 
+values (nombre, fechaact, tipo);
+insert into actividadDeportista (idactividad, iddeportista) values ((select idactividad from buscaractividadnombre(nombre)), iddep );
 $$
 Language sql
 
@@ -244,7 +336,7 @@ Language sql
 
 
 --*************************CARRERA*************************
---Crear carrera
+--Crear carrera con id del organizador, nombre, fecha, tipo de actividad, categoria, mapa de la carrera, privacidad, precio, cuenta bancaria
 create or replace function crearCarrera (
 	idorga int, nombcarr varchar, fechaevento timestamp, tipocarrera varchar, carreracategoria varchar, recorridocarrera varchar,
 	privacidad boolean, precio int, cuentabanc varchar) 
@@ -291,6 +383,24 @@ create or replace function obteneridcarrera(nombrecarr varchar) returns integer
 as
 $$
 select idcarrera from carrera where nombrecarrera = nombrecarr;
+$$
+Language sql
+
+
+--Buscar una carrera a partir de su id
+create or replace function buscarCarreraId (idcarr integer) returns carrera
+as
+$$
+select * from carrera where idCarrera = idcarr;
+$$
+Language sql
+
+
+--Buscar la categoria de una carrera a partir de su id
+create or replace function buscarCategoriaCarrera (idcarr integer) returns varchar
+as
+$$
+select categoria from categoriaCarrera where idCarrera = idcarr;
 $$
 Language sql
 
@@ -342,9 +452,22 @@ Language sql
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer) returns void
 as
 $$
-insert into usuariosCarrera (iddeportista,idcarrera) values (iddep, idcarr)
+declare usAgregar usuario := buscarUsuarioId(iddep);
+		catCarr categoriaCarrera := buscarCategoriaCarrera(idcarr);
+Begin
+	if catCarr = usAgregar.categoria or catCarr = 'Elite' then 
+		insert into usuariosCarrera (iddeportista,idcarrera) values (iddep, idcarr);
+	else
+		raise notice 'No coincide la categoria';
+	end if;
+End
 $$
-Language sql
+Language plpgsql
+select agregarUsuarioCarrera ()
+select * from usuario --11, 14
+select * from carrera --
+select * from categoriaCarrera
+delete 
 
 
 --Eliminar un usuario de una carrera
@@ -565,7 +688,7 @@ where iduser = amigUser.iddeportista
 order by fechainicio desc
 $$
 Language sql
---*************************USUARIO*************************
+--*************************Reto*************************
 
 
 
@@ -585,74 +708,3 @@ $$
 Language sql
 --*************************GENERAL*************************
 
-
-
---*************************GRUPO*************************
-
---Agregar un grupo
-create or replace function crearGrupo (nombgrup varchar, idadmin integer) returns void
-as
-$$
-insert into Grupo (nombre,idadministrador) values (nombgrup, idadmin);
-$$
-Language sql
-
-
---Modificar un grupo
-create or replace function modificarGrupo (idgroup int, nombgrup varchar) returns void
-as
-$$
-Update Grupo set nombre = nombgrup
-where idGrupo = idgroup;
-$$
-Language sql
-
-
---Eliminar un grupo
-create or replace function EliminarGrupo (idgroup int) returns void
-as
-$$
-Delete from Grupo where idGrupo = idgroup;
-Delete from UsuariosPorGrupo where idGrupo = idgroup;
-Delete from RetosGrupo where idGrupo = idgroup;
-Delete from CarrerasGrupo where idGrupo = idgroup;
-$$
-Language sql
-
-
---Ver usuarios del grupo
-create or replace function usuariosGrupo (idgroup integer)
-returns table (NombreGrupo varchar, idusuario integer, NombreUsuario varchar, ApellidosUsuario varchar)
-as
-$$
-Select gr.Nombre, u.idusuario, u.primernombre, u.Apellidos
-	from usuario as u
-	inner join usuariosPorGrupo as ug
-	on u.idusuario = ug.idusuario
-		inner join Grupo as gr
-		on gr.idgrupo = ug.idgrupo
-		where idgroup = gr.idGrupo
-$$
-Language sql
-
-
---Agregar usuario a un grupo
-create or replace function agregarUsuarioGrupo (iduser integer, idgroup integer)
-returns void
-as
-$$
-insert into usuariosPorGrupo (idusuario, idGrupo) values (iduser, idgroup);
-$$
-Language sql
-
-
---Eliminar usuario de un grupo
-create or replace function eliminarUsuarioGrupo (iduser integer, idgroup integer)
-returns void
-as
-$$
-Delete from usuariosPorGrupo where idusuario = iduser and idgroup = idusuario;
-$$
-Language sql
-
---*************************GRUPO*************************

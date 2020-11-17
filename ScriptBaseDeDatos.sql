@@ -29,6 +29,7 @@ create table Actividad(
 	tipoActividad text not null
 );
 
+
 create table ActividadDeportista(
 	idActividad int not null,
 	idDeportista int not null,

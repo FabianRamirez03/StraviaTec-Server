@@ -30,52 +30,15 @@ where idusuario = iduser;
 $$
 Language sql
 
---Buscar usuario por User Name ***************ARREGLAR EL LIKE
-create or replace function buscarUsuariousername (username varchar) returns usuario
-as
-$$
-select * from usuario where Upper(nombreusuario) like Upper(username)
-$$
-Language sql
 
 
---****************
-/*
-CREATE OR REPLACE FUNCTION  buscarUsuariousername (username varchar) RETURNS usuario AS $$
-select * from usuario where to_tsvector()
-$$ LANGUAGE plpgsql;
-
-select * from usuario
-
-
-Select CONCAT('''%','wajo','%''');
-where primernombre like '%ar%';
-
-select * from buscarUsuariousername('ar')
-select * from usuario
-*/
-
-
---Buscar usuario por Nombre ***************ARREGLAR EL LIKE
-create or replace function buscarUsuarioNombre (nombre varchar) returns usuario
-as
-$$
-Select * from usuario
-where  Upper(primernombre) like Upper(nombre);
-$$
-Language sql
-
-select * from usuario
-
-
---Buscar usuario por nombre y apellido
-create or replace function buscarUsuarioNombreApellido (nombre varchar, apellido varchar) returns usuario
-as
-$$
-Select * from usuario
-where Upper (primernombre) = Upper (nombre) and Upper(apellidos) = Upper(apellido);
-$$
-Language sql
+CREATE OR REPLACE FUNCTION  buscaUsuarioSimilar (nombBusc varchar) RETURNS table (idUsuario integer, nombreUsuario varchar, primerNombre varchar, apellido varchar) 
+AS $$
+select idusuario, nombreusuario, primernombre, apellidos from usuario
+where Upper (primernombre) like '%' ||Upper(nombBusc)|| '%' 
+or Upper (apellidos) like '%' ||Upper(nombBusc)|| '%'
+or Upper (nombreusuario) like '%' ||Upper(nombBusc)|| '%'
+$$ LANGUAGE sql;
 
 
 --Validacion de usuario y contrasena
@@ -480,12 +443,8 @@ End
 $$
 Language plpgsql
 
-delete from usuario
-select agregarUsuarioCarrera ('14','1')
 select * from usuariosCarrera
-select * from usuario --11, 14
-select * from carrera -- 1
-select * from categoriaCarrera
+select agregarUsuarioCarrera (2,1)
 
 
 --Eliminar un usuario de una carrera
@@ -571,6 +530,8 @@ order by cu.categoriadeportista
 $$
 Language sql
 
+select 
+select * from participantesCarrera(1)
 
 --Ver posiciones de la carrera por medio del ID
 create or replace function posicionesCarrera (idcarr integer)
@@ -584,6 +545,9 @@ Select cu.primernombre, cu.Apellidos, u.edad, cu.categoriadeportista, cu.duracio
 	order by cu.duracion asc
 $$
 Language sql
+
+
+select * from posicionesCarrera(1)
 --*************************CARRERA*************************
 
 

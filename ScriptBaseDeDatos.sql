@@ -10,11 +10,13 @@ create table usuario(
 	apellidos text not null,
 	fechaNacimiento date not null,
 	nacionalidad text default 'No indica' ,
-	foto bytea,
-	edad integer,
-	categoria varchar
+	foto text default '',
+	edad integer default 0,
+	categoria varchar default ''
 );
-
+alter table usuario add column categoria text ;
+alter table usuario alter column edad set default 0;
+select * from usuario
 
 create table AmigosUsuario(
 	idDeportista int not null,

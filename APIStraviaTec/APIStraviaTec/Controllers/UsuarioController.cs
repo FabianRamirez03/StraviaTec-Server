@@ -80,7 +80,7 @@ namespace APIStraviaTec.Controllers
                     }
                     else
                     {
-                        Usuarioret.Foto = (byte[])dr[7];
+                        Usuarioret.Foto = (string)dr[7];
                     }
                     Usuarioret.Carrera = null;
                     Usuarioret.Reto = null;
@@ -103,7 +103,7 @@ namespace APIStraviaTec.Controllers
         [Route("crearUsuario")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public List<Usuario> PostcrearUsuario([FromBody] Usuario usuario)
+        public Usuario PostcrearUsuario([FromBody] Usuario usuario)
         {
             List<Usuario> Usuarioret = new List<Usuario>();
             //Connect to a PostgreSQL database
@@ -118,11 +118,13 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@apellido", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Apellidos);
             command.Parameters.AddWithValue("@nacimiento", NpgsqlTypes.NpgsqlDbType.Date, usuario.Fechanacimiento);
             command.Parameters.AddWithValue("@pais", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nacionalidad);
+            command.Parameters.AddWithValue("@imagen", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Foto);
+
             // Execute the query and obtain a result set
             command.ExecuteNonQuery();
             Debug.WriteLine("Usuario creado exitosamente");
             conn.Close();
-            return Usuarioret;
+            return usuario;
         }
 
         [Route("porUsuarioName")]
@@ -157,7 +159,7 @@ namespace APIStraviaTec.Controllers
                     }
                     else
                     {
-                        usuario.Foto = (byte[])dr[7];
+                        usuario.Foto = (String)dr[7];
                     }
                     usuario.Carrera = null;
                     usuario.Reto = null;
@@ -204,30 +206,9 @@ namespace APIStraviaTec.Controllers
                     Usuarioret.Apellidos = dr[4].ToString();
                     Usuarioret.Fechanacimiento = (DateTime)dr[5];
                     Usuarioret.Nacionalidad = dr[6].ToString();
-                    if (dr[7] == DBNull.Value)
-                    {
-                        Usuarioret.Foto = null;
-                    }
-                    else
-                    {
-                        Usuarioret.Foto = (byte[])dr[7];
-                    }
-                    if (dr[8] == DBNull.Value)
-                    {
-                        Usuarioret.Edad = null;
-                    }
-                    else
-                    {
-                        Usuarioret.Edad = (int)dr[8];
-                    }
-                    if(dr[9] == DBNull.Value)
-                    {
-                        Usuarioret.Categoria = null;
-                    }
-                    else
-                    {
-                        Usuarioret.Categoria = dr[9].ToString();
-                    }
+                    Usuarioret.Foto = (string)dr[7];
+                    Usuarioret.Edad = (int)dr[8];
+                    Usuarioret.Categoria = dr[9].ToString();
                     Usuarioret.Carrera = null;
                     Usuarioret.Reto = null;
                     Usuarioret.Grupo = null;
@@ -278,7 +259,7 @@ namespace APIStraviaTec.Controllers
                     }
                     else
                     {
-                        usuario.Foto = (byte[])dr[7];
+                        usuario.Foto = (String)dr[7];
                     }
                     usuario.Carrera = null;
                     usuario.Reto = null;

@@ -188,7 +188,7 @@ namespace APIStraviaTec.Controllers
                     }
                     else
                     {
-                        usuario.Foto = (byte[])dr[7];
+                        usuario.Foto = (string)dr[7];
                     }
                     usuario.Carrera = null;
                     usuario.Reto = null;

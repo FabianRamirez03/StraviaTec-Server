@@ -10,9 +10,9 @@ create table usuario(
 	apellidos text not null,
 	fechaNacimiento date not null,
 	nacionalidad text default 'No indica' ,
-	foto bytea,
-	edad integer,
-	categoria varchar
+	foto text default '',
+	edad integer default 0,
+	categoria text default ''
 );
 
 
@@ -22,10 +22,11 @@ create table AmigosUsuario(
 	primary key (idDeportista, idAmigo)
 );
 
+
 create table Actividad(
 	idActividad serial primary key not null,
 	nombreActividad text not null,
-	fecha timestamp,
+	fecha timestamp default '1999-01-01',
 	tipoActividad text not null
 );
 
@@ -33,10 +34,10 @@ create table Actividad(
 create table ActividadDeportista(
 	idActividad int not null,
 	idDeportista int not null,
-	kilometraje text,
-	altura text,
-	recorrido text,
-	duracion text,
+	kilometraje text default '',
+	altura text default '',
+	recorrido text default '',
+	duracion text default '',
 	primary key (idActividad,idDeportista)
 );
 
@@ -71,7 +72,7 @@ create table Carrera(
 	nombreCarrera text not null,
 	fechaCarrera timestamp not null,
 	TipoActividad text not null,
-	recorrido text,
+	recorrido text default  '',
 	privada boolean default 'False',
 	costo int not null,
 	cuentaBancaria text not null
@@ -88,8 +89,8 @@ create table categoriaCarrera(
 create table solicitudesCarrera(
 	idCarrera int not null,
 	idUsuario int not null,
-	categoriaCarrera varchar,
-	recibo bytea,
+	categoriaCarrera text default '',
+	recibo text default '',
 	primary key (idCarrera, idUsuario)
 );
 
@@ -98,11 +99,11 @@ create table usuariosCarrera (
 	idDeportista int not null,
 	idCarrera int not null,
 	categoriaCompite varchar default 'Elite',
-	tiempoRegistrado text,
-	kilometraje text,
-	altura text,
+	tiempoRegistrado text default '',
+	kilometraje text default '',
+	altura text default '',
 	completitud boolean default 'False',
-	Recorrido text,
+	Recorrido text default '',
 	primary key (idDeportista,idCarrera)
 );
 
@@ -112,8 +113,8 @@ create table Reto(
 	idOrganizador int not null,
 	nombreReto text not null,
 	objetivoReto text not null,
-	fechaInicio timestamp,
-	fechaFinaliza timestamp,
+	fechaInicio timestamp default '1999-01-01',
+	fechaFinaliza timestamp default '1999-01-01',
 	tipoActividad text not null,
 	tipoReto text not null,
 	privada boolean default 'False'
@@ -123,11 +124,11 @@ create table Reto(
 create table usuariosReto (
 	idDeportista int not null,
 	idReto int not null,
-	duracion text,
-	kilometraje text,
-	altura text,
+	duracion text default '',
+	kilometraje text default '',
+	altura text default '',
 	completitud boolean default 'False',
-	Recorrido text,
+	Recorrido text default '',
 	primary key (idDeportista,idReto)
 );
 
@@ -137,8 +138,9 @@ create table Patrocinador(
 	nombreComercial text primary key not null,
 	representante text not null,
 	numeroTelefono text not null,
-	logo bytea
+	logo text default ''
 );
+
 
 --Tabla Patrocinadores de cada reto
 create table PatrocinadoresReto(
@@ -147,12 +149,14 @@ create table PatrocinadoresReto(
 	primary key (idReto,nombreComercial)
 );
 
+
 --Tabla Patrocinadores de cada carrera
 create table PatrocinadoresCarrera(
 	idCarrera int not null,
 	nombreComercial text not null,
 	primary key (idCarrera,nombreComercial)
 );
+
 
 --Modificacion de tablas
 

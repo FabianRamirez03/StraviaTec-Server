@@ -69,7 +69,6 @@ select agregarCarreraGrupo (1,2);
 select enviarSolicitudCarrera(1,5, 'Elite',bytea('https://www.nwcu.com/storage/app/media/Check-Image-Example.jpg'));
 
 
-
 --Agregar usuarios a la carrera por el id del deportista y el id de la carrera
 select agregarUsuarioCarrera (1,1,'Master-A');
 select agregarUsuarioCarrera (2,1,'Elite');

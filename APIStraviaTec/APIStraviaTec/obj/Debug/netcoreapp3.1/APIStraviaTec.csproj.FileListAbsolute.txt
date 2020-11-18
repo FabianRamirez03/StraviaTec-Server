@@ -169,3 +169,4 @@ C:\Users\wajib\OneDrive - Estudiantes ITCR\Documentos\TEC\2020 II Semestre\Bases
 C:\Users\wajib\OneDrive - Estudiantes ITCR\Documentos\TEC\2020 II Semestre\Bases\Proyecto1\Server API\StraviaTec-Server\APIStraviaTec\APIStraviaTec\obj\Debug\netcoreapp3.1\APIStraviaTec.pdb
 C:\Users\wajib\OneDrive - Estudiantes ITCR\Documentos\TEC\2020 II Semestre\Bases\Proyecto1\Server API\StraviaTec-Server\APIStraviaTec\APIStraviaTec\obj\Debug\netcoreapp3.1\APIStraviaTec.genruntimeconfig.cache
 C:\Users\wajib\OneDrive - Estudiantes ITCR\Documentos\TEC\2020 II Semestre\Bases\Proyecto1\Server API\StraviaTec-Server\APIStraviaTec\APIStraviaTec\bin\Debug\netcoreapp3.1\web.config
+C:\Users\maria\OneDrive - Estudiantes ITCR\Escritorio\Computadores\6 semestre\bases\Proyecto\Proyecto1\StraviaTec-Server\APIStraviaTec\APIStraviaTec\bin\Debug\netcoreapp3.1\web.config

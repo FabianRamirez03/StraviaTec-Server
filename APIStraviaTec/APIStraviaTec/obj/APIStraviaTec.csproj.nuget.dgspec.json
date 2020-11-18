@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\wajib\\OneDrive - Estudiantes ITCR\\Documentos\\TEC\\2020 II Semestre\\Bases\\Proyecto1\\Server API\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {}
+    "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {}
   },
   "projects": {
-    "C:\\Users\\wajib\\OneDrive - Estudiantes ITCR\\Documentos\\TEC\\2020 II Semestre\\Bases\\Proyecto1\\Server API\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {
+    "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\wajib\\OneDrive - Estudiantes ITCR\\Documentos\\TEC\\2020 II Semestre\\Bases\\Proyecto1\\Server API\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+        "projectUniqueName": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
         "projectName": "APIStraviaTec",
-        "projectPath": "C:\\Users\\wajib\\OneDrive - Estudiantes ITCR\\Documentos\\TEC\\2020 II Semestre\\Bases\\Proyecto1\\Server API\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
-        "packagesPath": "C:\\Users\\wajib\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\wajib\\OneDrive - Estudiantes ITCR\\Documentos\\TEC\\2020 II Semestre\\Bases\\Proyecto1\\Server API\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\obj\\",
+        "projectPath": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+        "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\wajib\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -79,7 +79,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }

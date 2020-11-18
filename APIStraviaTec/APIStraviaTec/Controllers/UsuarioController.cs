@@ -51,9 +51,9 @@ namespace APIStraviaTec.Controllers
         [Route("porUsuarioId")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public List<Usuario> PostUsuarioId([FromBody] Usuario usuario)
+        public Usuario PostUsuarioId([FromBody] Usuario usuario)
         {
-            List<Usuario> Usuarioret = new List<Usuario>();
+            Usuario Usuarioret = new Usuario();
             //Connect to a PostgreSQL database
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
@@ -67,26 +67,25 @@ namespace APIStraviaTec.Controllers
             {
                 while (dr.Read())
                 {
-                    usuario.Idusuario = (int)dr[0];
-                    usuario.Nombreusuario = dr[1].ToString();
-                    usuario.Contrasena = dr[2].ToString();
-                    usuario.Primernombre = dr[3].ToString();
-                    usuario.Apellidos = dr[4].ToString();
-                    usuario.Fechanacimiento = (DateTime)dr[5];
-                    usuario.Nacionalidad = dr[6].ToString();
+                    Usuarioret.Idusuario = (int)dr[0];
+                    Usuarioret.Nombreusuario = dr[1].ToString();
+                    Usuarioret.Contrasena = dr[2].ToString();
+                    Usuarioret.Primernombre = dr[3].ToString();
+                    Usuarioret.Apellidos = dr[4].ToString();
+                    Usuarioret.Fechanacimiento = (DateTime)dr[5];
+                    Usuarioret.Nacionalidad = dr[6].ToString();
                     if (dr[7] == DBNull.Value)
                     {
-                        usuario.Foto = null;
+                        Usuarioret.Foto = null;
                     }
                     else
                     {
-                        usuario.Foto = (byte[])dr[7];
+                        Usuarioret.Foto = (byte[])dr[7];
                     }
-                    usuario.Carrera = null;
-                    usuario.Reto = null;
-                    usuario.Grupo = null;
-                    string json = JsonConvert.SerializeObject(usuario);
-                    Usuarioret.Add(usuario);
+                    Usuarioret.Carrera = null;
+                    Usuarioret.Reto = null;
+                    Usuarioret.Grupo = null;
+                    string json = JsonConvert.SerializeObject(Usuarioret);
 
 
                 }
@@ -178,6 +177,74 @@ namespace APIStraviaTec.Controllers
             conn.Close();
             return Usuarioret;
         }
+
+        [Route("porNombreUsuario")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public Usuario buscarUsuariousername([FromBody] Usuario usuario)
+        {
+            Usuario Usuarioret = new Usuario();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarUsuariousername", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nombreusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    Usuarioret.Idusuario = (int)dr[0];
+                    Usuarioret.Nombreusuario = dr[1].ToString();
+                    Usuarioret.Contrasena = dr[2].ToString();
+                    Usuarioret.Primernombre = dr[3].ToString();
+                    Usuarioret.Apellidos = dr[4].ToString();
+                    Usuarioret.Fechanacimiento = (DateTime)dr[5];
+                    Usuarioret.Nacionalidad = dr[6].ToString();
+                    if (dr[7] == DBNull.Value)
+                    {
+                        Usuarioret.Foto = null;
+                    }
+                    else
+                    {
+                        Usuarioret.Foto = (byte[])dr[7];
+                    }
+                    if (dr[8] == DBNull.Value)
+                    {
+                        Usuarioret.Edad = null;
+                    }
+                    else
+                    {
+                        Usuarioret.Edad = (int)dr[8];
+                    }
+                    if(dr[9] == DBNull.Value)
+                    {
+                        Usuarioret.Categoria = null;
+                    }
+                    else
+                    {
+                        Usuarioret.Categoria = dr[9].ToString();
+                    }
+                    Usuarioret.Carrera = null;
+                    Usuarioret.Reto = null;
+                    Usuarioret.Grupo = null;
+                    string json = JsonConvert.SerializeObject(Usuarioret);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Usuario no encontrado");
+
+            }
+            conn.Close();
+            return Usuarioret;
+        }
         [Route("porUsuarioNP")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -249,6 +316,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@apellido", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Apellidos);
             command.Parameters.AddWithValue("@nacimiento", NpgsqlTypes.NpgsqlDbType.Date, usuario.Fechanacimiento);
             command.Parameters.AddWithValue("@pais", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nacionalidad);
+            command.Parameters.AddWithValue("@imagen", NpgsqlTypes.NpgsqlDbType.Bytea, usuario.Foto);
             // Execute the query and obtain a result set
             command.ExecuteNonQuery();
             Debug.WriteLine("Usuario creado exitosamente");
@@ -459,6 +527,26 @@ namespace APIStraviaTec.Controllers
             };
 
             return jsons[0];
+        }
+        [Route("agregarAmigo")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Usuario> PostagregarAmigo([FromBody] Amigosusuario usuario)
+        {
+            List<Usuario> Usuarioret = new List<Usuario>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("agregarAmigo", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Iddeportista);
+            command.Parameters.AddWithValue("@idamigo", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idamigo);
+            // Execute the query and obtain a result set
+            command.ExecuteNonQuery();
+            Debug.WriteLine("Amigo agragado exitosamente");
+            conn.Close();
+            return Usuarioret;
         }
     }  
 }

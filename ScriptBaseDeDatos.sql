@@ -84,12 +84,15 @@ create table categoriaCarrera(
 	primary key (idCarrera, categoria)
 );
 
+
 create table solicitudesCarrera(
 	idCarrera int not null,
 	idUsuario int not null,
+	categoriaCarrera varchar,
 	recibo bytea,
 	primary key (idCarrera, idUsuario)
 );
+
 
 create table usuariosCarrera (
 	idDeportista int not null,

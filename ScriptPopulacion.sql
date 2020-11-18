@@ -16,6 +16,7 @@ select crearUsuario('robert25', 'robert25','Roberto','Arias','1989-10-12','Costa
 select crearUsuario('mari123', 'mari123','Marie','Smith','1995-05-04','Canadiense', bytea('https://www.mi-deporte.com/wp-content/uploads/2018/08/la-mejor-ropa-mujer-ciclismo.jpg'));
 select crearUsuario('pedro123', 'pedro123','Pedro','Perico','1995-05-04','Los Palotes', bytea('https://www.bestfunnies.com/wp-content/uploads/2015/05/Funny-Cyclist-22.jpg'));
 select crearUsuario('andrey', 'andrey','Andrey','Amador','1986-08-29','Costarricense', bytea('https://elguardian.cr/wp-content/uploads/2016/12/Amador.jpg'));
+select crearUsuario('osoto', 'osoto','Olger','Soto','1956-08-29','Costarricense', bytea('https://pbs.twimg.com/media/DTRhlnhXUAUoTU4.jpg'));
 
 
 --Agregar amigos entre usuario
@@ -34,7 +35,7 @@ select crearActividad (3,'cruzar el arenal', '2020-5-4','Kayak');
 
 
 --Creacion de un grupo y asignacion de su administrador
-select crearGrupo ('Moncho Bikers','1')
+select crearGrupo ('Moncho Bikers','1');
 
 
 --Agregar usuarios al grupo por el id del usuario y el id del grupo
@@ -43,8 +44,15 @@ select agregarUsuarioGrupo ('3','1');
 
 
 --Crear una carrera
-select crearCarrera ('1','Vuelta al Arenal','2020-11-22 8:00:00','Bicicleta','Master-A','<xml><xml>', 'false', 10500,'CR-5412378');
-select crearCarrera ('1','Palmarin','2020-06-22 11:30:00','Caminata','Sub-23','<xml><xml>', 'true',5000,'CR-5412378');
+select crearCarrera ('1','Los Conquistadores','2020-11-22 8:00:00','Bicicleta','<xml><xml>', 'false', 10500,'CR-5412378');
+select crearCarrera ('1','Ascenso al Chirripo','2020-06-22 11:30:00','Caminata','<xml><xml>', 'true',5000,'CR-5412378');
+
+
+--Asignacion de categorias a la carrera
+select asignarCategoriaCarrera(1,'Master-A');
+select asignarCategoriaCarrera (1,'Open');
+select asignarCategoriaCarrera (1,'Elite');
+select asignarCategoriaCarrera (2,'Elite');
 
 
 --Agregar patrocinadores a la carrera
@@ -54,18 +62,28 @@ select agregarPatrocinadorCarrera (2,'Gatorade');
 
 
 --Asignacion de una carrera privada a un grupo por id del grupo y id de la carrera
-select agregarCarreraGrupo (1,1)
+select agregarCarreraGrupo (1,2);
 
 
---Enviar solicitud de afiliacion a una carrera con idCarrera, idUsuario y foto del recibo
-select enviarSolicitudCarrera(1,2,bytea('https://www.nwcu.com/storage/app/media/Check-Image-Example.jpg'));
+--Enviar solicitud de afiliacion a una carrera con idCarrera, idUsuario, la categoria que quiere inscribirse y foto del recibo
+select enviarSolicitudCarrera(1,5, 'Elite',bytea('https://www.nwcu.com/storage/app/media/Check-Image-Example.jpg'));
+
 
 
 --Agregar usuarios a la carrera por el id del deportista y el id de la carrera
-select agregarUsuarioCarrera (1,1);
-select agregarUsuarioCarrera (2,1); --Este no lo agrega porque no coincide la categoria
-select agregarUsuarioCarrera (4,1);
+select agregarUsuarioCarrera (1,1,'Master-A');
+select agregarUsuarioCarrera (2,1,'Elite');
+select agregarUsuarioCarrera (3,1,'Elite');
+select agregarUsuarioCarrera (4,1,'Master-A');
 
+
+/*Actualizar datos de los participantes de la carrera por medio del id del deportista, el id de la carrera, distancia, altura,
+tiempo, completitud y el mapa de la carrera
+*/
+select actualizarDatosCarreraUsuario(1,1,'100','2.2','5:00:00','true','xml');
+select actualizarDatosCarreraUsuario(2,1,'100','2.2','5:30:00','true','xml');
+select actualizarDatosCarreraUsuario(3,1,'80','2.2','4:10:00','false','xml');
+select actualizarDatosCarreraUsuario(4,1,'100','2.2','4:50:00','true','xml');
 
 --Crear reto 
 select crearReto ('1','2000 metros de ascenso','2','2020-10-20 7:00:00','2020-10-25 7:00:00','Senderismo','altitud','false');

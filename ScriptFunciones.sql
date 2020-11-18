@@ -31,8 +31,8 @@ $$
 Language sql
 
 
-
-CREATE OR REPLACE FUNCTION  buscaUsuarioSimilar (nombBusc varchar) RETURNS table (idUsuario integer, nombreUsuario varchar, primerNombre varchar, apellido varchar) 
+--Buscar usuario por nombre, apellido o nombre de usuario
+create or replace function buscaUsuarioSimilar (nombBusc varchar) RETURNS table (idUsuario integer, nombreUsuario varchar, primerNombre varchar, apellido varchar) 
 AS $$
 select idusuario, nombreusuario, primernombre, apellidos from usuario
 where Upper (primernombre) like '%' ||Upper(nombBusc)|| '%' 
@@ -91,6 +91,7 @@ Delete from grupo where idadministrador = iduser;
 Delete from usuario where idusuario = iduser;
 $$
 Language sql
+
 --*************************USUARIO*************************
 
 
@@ -114,7 +115,6 @@ $$
 select * from grupo where nombre = nombregrupo;
 $$
 Language sql
-
 
 
 --Modificar un grupo
@@ -191,6 +191,31 @@ $$
 insert into RetosGrupo (idGrupo, idReto) values (idgroup, idret);
 $$
 Language sql
+
+--Ver carreras de un grupo por su id
+create or replace function buscarCarrerasGrupo(idgr integer) returns
+table (idCarrera int, idOrg int, nombCar varchar, fecha timestamp, tipo varchar, costo integer, cuenta varchar, mapa varchar)
+as
+$$
+select ca.idCarrera, ca.idOrganizador, ca.nombreCarrera, ca.fechaCarrera, ca.tipoActividad, ca.costo, ca.cuentaBancaria, ca.recorrido 
+from carrera as ca
+	inner join carrerasGrupo as cg on ca.idcarrera = cg.idcarrera
+	where cg.idgrupo = idgr;
+$$
+Language sql
+
+
+--Ver retos de un grupo por su id
+create or replace function buscarRetosGrupo(idgr integer) returns
+table (idReto int, idOrg int, nombRet varchar, tipoAct varchar, tipoRet varchar, fechaIn timestamp, fechaFin timestamp, objetivo varchar)
+as
+$$
+select rt.idReto, rt.idOrganizador, rt.nombreReto, rt.tipoActividad, rt.tipoReto, rt.fechaInicio, rt.fechaFinaliza, rt.objetivoReto
+from reto as rt
+	inner join retosGrupo as rg on rt.idreto = rg.idreto
+	where rg.idgrupo = idgr;
+$$
+Language sql
 --*************************GRUPO*************************
 
 
@@ -207,6 +232,7 @@ insert into actividadDeportista (idactividad, iddeportista) values ((select idac
 $$
 Language sql
 select * from actividadDeportista
+
 
 --Modificar el nombre de una Actividad
 create or replace function modificarActividad (idact integer, nombre varchar) returns void
@@ -308,21 +334,33 @@ where iduser = amigUser.iddeportista
 order by fecha desc
 $$
 Language sql
+
 --*************************ACTIVIDAD*************************
 
 
 
 --*************************CARRERA*************************
+
 --Crear carrera con id del organizador, nombre, fecha, tipo de actividad, categoria, mapa de la carrera, privacidad, precio, cuenta bancaria
 create or replace function crearCarrera (
-	idorga int, nombcarr varchar, fechaevento timestamp, tipocarrera varchar, carreracategoria varchar, recorridocarrera varchar,
+	idorga int, nombcarr varchar, fechaevento timestamp, tipocarrera varchar, recorridocarrera varchar,
 	privacidad boolean, precio int, cuentabanc varchar) 
 	returns void
 	as
 	$$
 	insert into Carrera (idorganizador, nombrecarrera, fechacarrera, tipoactividad, recorrido, privada, costo, cuentabancaria) 
 	values (idorga, nombcarr, fechaevento, tipocarrera, recorridocarrera, privacidad, precio, cuentabanc);
-	insert into categoriaCarrera (select obteneridcarrera(nombcarr), carreracategoria)
+$$
+Language sql
+
+
+--Asignar categoria a la carrera
+create or replace function asignarCategoriaCarrera (idcarr integer, categ varchar) returns void
+as
+$$
+insert into categoriaCarrera (idcarrera, categoria)
+select idcarr,categ
+where exists (select 1 from carrera where idCarrera = idcarr);
 $$
 Language sql
 
@@ -374,7 +412,7 @@ Language sql
 
 
 --Buscar la categoria de una carrera a partir de su id
-create or replace function buscarCategoriaCarrera (idcarr integer) returns varchar
+create or replace function buscarCategoriaCarrera (idcarr integer) returns table(categoriasCarrera varchar)
 as
 $$
 select categoria from categoriaCarrera where idCarrera = idcarr;
@@ -395,45 +433,45 @@ Language sql
 
 
 --Agregar solicitud de afiliacion a una carrera
-create or replace function enviarSolicitudCarrera (idcarr int, iduser int, recib bytea)
+create or replace function enviarSolicitudCarrera (idcarr int, iduser int, categoria varchar, recib bytea)
 returns void
 as
 $$
-insert into solicitudesCarrera (idcarrera, idusuario, recibo)
-select idcarr, iduser, recib
+insert into solicitudesCarrera (idcarrera, idusuario, categoriaCarrera, recibo)
+select idcarr, iduser, categoria, recib
 where exists (select 1 from Carrera where idcarrera = idcarr);
 $$
 Language sql
 
 
 --Aceptar solicitud de afiliacion a la carrera
-create or replace function aceptarSolicitud (idcarr int, iduser int) returns void
+create or replace function aceptarSolicitud (idcarr int, iduser int, categoria varchar) returns void
 as
 $$
-select agregarUsuarioCarrera (iduser,idcarr)
+select agregarUsuarioCarrera (iduser,idcarr,categoria);
 $$
 Language sql
 
 
 --Eliminar solicitud de Afiliacion
-create or replace function eliminarSolicitud (iduser int, idcarr int)
+create or replace function eliminarSolicitud (iduser int, idcarr int, catCarr varchar)
 returns void
 as
 $$
-Delete from solicitudesCarrera where idcarrera = idcarr and idusuario = iduser
+Delete from solicitudesCarrera where idcarrera = idcarr and idusuario = iduser and categoriaCarrera = catCarr;
 $$
 Language sql
 
 
---Agregar un usuario a una carrera
-create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer) returns void
+--Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
+create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
 $$
-declare usAgregar varchar := (select categoria from buscarUsuarioId(iddep));
-		catCarr varchar := buscarCategoriaCarrera(idcarr);
+declare usAgregar varchar := (select categoria from buscarUsuarioId(iddep)); -- categoria del usuario
 Begin
-	if catCarr = usAgregar then 
-		insert into usuariosCarrera (iddeportista,idcarrera, categoriacompite) values (iddep, idcarr, catCarr);
+	if  exists (select 1 from categoriaCarrera where categoria = catCarr and idCarrera = idcarr) and catCarr = usAgregar
+	and not exists (select * from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr) then 
+		insert into usuariosCarrera (iddeportista, idcarrera, categoriacompite) values (iddep, idcarr, catCarr);
 	elseif catCarr = 'Elite' then
 		insert into usuariosCarrera (iddeportista,idcarrera) values (iddep, idcarr);
 	else
@@ -443,15 +481,12 @@ End
 $$
 Language plpgsql
 
-select * from usuariosCarrera
-select agregarUsuarioCarrera (2,1)
-
 
 --Eliminar un usuario de una carrera
 create or replace function eliminarUsuarioCarrera (iddep integer, idcarr integer) returns void
 as
 $$
-Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr
+Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr;
 $$
 Language sql
 
@@ -471,11 +506,11 @@ Language sql
 
 --Ver las carreras de todos los usuario
 create or replace function CarrerasUsuarios () returns table (
-	idusuario int, primernombre varchar, apellidos varchar, categoriadeportista varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
+	idusuario int, primernombre varchar, apellidos varchar, categoria varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
 	fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
-Select d.idusuario, d.primernombre, d.apellidos, d.categoria,uc.idcarrera, carr.nombrecarrera, carr.tipoactividad, carr.fechacarrera,
+Select d.idusuario, d.primernombre, d.apellidos, uc.categoriaCompite,uc.idcarrera, carr.nombrecarrera, carr.tipoactividad, carr.fechacarrera,
 		uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
 from usuario d
 inner join usuariosCarrera as uc
@@ -505,7 +540,7 @@ Language sql
 
 --Ver carreras por ID del usuario
 create or replace function buscarCarrerasPorUsuaio (iduser integer)
-returns table (idusuario int, primernombre varchar, apellidos varchar, categoriadeportista varchar,idcarrera int, nombrecarrera varchar, tipoactividad varchar,
+returns table (idusuario int, primernombre varchar, apellidos varchar, categoriaCompite varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
 				fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
@@ -517,37 +552,31 @@ Language sql
 
 --lista de participantes en la carrera
 create or replace function participantesCarrera (idcarr integer)
-returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriadeportista varchar)
+returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaCompite varchar)
 as
 $$
-select cu.primernombre, cu.apellidos, u.edad, cu.categoriadeportista from carrerasUsuarios() as cu
+select cu.primernombre, cu.apellidos, u.edad, cu.categoria from carrerasUsuarios() as cu
 inner join usuario as u
 on u.primernombre = cu.primernombre and u.apellidos = cu.apellidos
-inner join categoriaCarrera as cc
-on cc.idcarrera = cu.idcarrera
 where cu.idcarrera = idcarr
-order by cu.categoriadeportista
+order by cu.categoria
 $$
 Language sql
 
-select 
-select * from participantesCarrera(1)
 
 --Ver posiciones de la carrera por medio del ID
 create or replace function posicionesCarrera (idcarr integer)
 returns table (NombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriadeportista varchar, tiempo varchar)
 as
 $$
-Select cu.primernombre, cu.Apellidos, u.edad, cu.categoriadeportista, cu.duracion from carrerasUsuarios() as cu
+Select cu.primernombre, cu.Apellidos, u.edad, cu.categoria, cu.duracion from carrerasUsuarios() as cu
 	inner join usuario as u
 	on u.idusuario = cu.idusuario
 	where idcarr = cu.idcarrera
-	order by cu.duracion asc
+	order by cu.categoria,cu.duracion asc
 $$
 Language sql
 
-
-select * from posicionesCarrera(1)
 --*************************CARRERA*************************
 
 

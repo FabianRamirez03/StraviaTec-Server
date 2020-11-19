@@ -6,7 +6,7 @@
 2 -> administrador
 */
 CREATE OR REPLACE FUNCTION crearUsuario (username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar,
-										 imagen bytea, administra integer) RETURNS void AS $$
+										 imagen varchar, administra integer) RETURNS void AS $$
 DECLARE
 	age INTEGER;
 	categ varchar;
@@ -23,7 +23,7 @@ insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNac
 values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, administra);
 END;
 $$ LANGUAGE plpgsql;
-select * from usuario
+
 
 --Verifica si ya existe un nombre de usuario
 create or replace function verificarUsuarioExiste (nombuser varchar) returns boolean
@@ -52,6 +52,15 @@ where Upper (primernombre) like '%' ||Upper(nombBusc)|| '%'
 or Upper (apellidos) like '%' ||Upper(nombBusc)|| '%'
 or Upper (nombreusuario) like '%' ||Upper(nombBusc)|| '%'
 $$ LANGUAGE sql;
+
+
+--Buscar usuario por nombre de usuario
+create or replace function buscarUsuariousername (username varchar) returns usuario
+as
+$$
+select * from usuario where Upper(nombreusuario) = Upper(username)
+$$
+Language sql
 
 
 /* Indica si un usuario existe y si es administrador o deportista
@@ -97,7 +106,7 @@ Language sql
 
 
 --Actualizar un usuario
-create or replace function modificarUsuario (iduser int,username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar,imagen bytea)
+create or replace function modificarUsuario (iduser int,username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar,imagen varchar)
 returns void
 as
 $$
@@ -277,15 +286,16 @@ Language sql
 --*************************ACTIVIDAD*************************
 
 --Crear actividad 
-create or replace function crearActividad (iddep integer, nombre varchar, fechaact timestamp, tipo varchar) returns void
+create or replace function crearActividad (iddep integer, nombre varchar, kilom varchar, alt varchar, mapa varchar, tiempo varchar, fechaact timestamp) 
+returns void
 as
 $$
 insert into actividad (nombreactividad, fecha, tipoactividad) 
 values (nombre, fechaact, tipo);
-insert into actividadDeportista (idactividad, iddeportista) values ((select idactividad from buscaractividadnombre(nombre)), iddep );
+insert into actividadDeportista (idactividad, iddeportista, kilometraje, altura, recorrido, duracion ) 
+values ((select idactividad from buscaractividadnombre(nombre)), iddep, kilom, alt, mapa, tiempo);
 $$
 Language sql
-select * from actividadDeportista
 
 
 --Modificar el nombre de una Actividad
@@ -348,7 +358,7 @@ as
 $$
 Select d.idusuario, d.primernombre, ad.idactividad, act.nombreActividad, act.tipoactividad, act.fecha, ad.kilometraje, ad.altura, ad.duracion, ad.recorrido
 from usuario d
-inner join actividadDeportista ad
+inner join ActividadDeportista ad
 	on d.idusuario = ad.iddeportista
 	inner join actividad act
 		on act.idactividad = ad.idactividad
@@ -474,6 +484,17 @@ $$
 Language sql
 
 
+--Ver carreras creadas por un administrador
+create or replace function verCarrerasAdmin (idadmin integer) returns table 
+(NombreCarrera varchar, fecha timestamp, tipoActividad varchar, privacidad boolean, costo integer, cuenta varchar, mapa varchar)
+as
+$$
+select nombreCarrera, fechaCarrera, tipoActividad, privada, costo, cuentabancaria, recorrido from  carrera 
+where idOrganizador = idadmin ;
+$$
+Language sql
+
+
 --Agregar patrocinador a una carrera, valida que exista el patrocinador
 create or replace function agregarPatrocinadorCarrera (idcarr int, nombrepatrocinador varchar)
 	returns void
@@ -487,7 +508,7 @@ Language sql
 
 
 --Agregar solicitud de afiliacion a una carrera
-create or replace function enviarSolicitudCarrera (idcarr int, iduser int, categoria varchar, recib bytea)
+create or replace function enviarSolicitudCarrera (idcarr int, iduser int, categoria varchar, recib varchar)
 returns void
 as
 $$
@@ -678,6 +699,18 @@ $$
 Language sql
 
 
+--Ver retos de un administrador por el id del organizador
+create or replace function verRetosAdmin (idadmin integer) returns table 
+(idReto integer, NombreReto varchar, tipoActividad varchar, tipoReto varchar, objetivo varchar,
+ privacidad boolean,  fechaInicio timestamp, fechaFinaliza timestamp)
+as
+$$
+select idReto, nombreReto,tipoActividad, tipoReto, objetivoReto, privada, fechaInicio, fechaFinaliza  from  reto 
+where idOrganizador = idadmin ;
+$$
+Language sql
+
+
 --Agregar patrocinador a una reto, valida que exista el patrocinador
 create or replace function agregarPatrocinadorReto (idret int, nombrepatrocinador varchar)
 	returns void
@@ -783,4 +816,3 @@ order by fecha desc
 $$
 Language sql
 --*************************GENERAL*************************
-

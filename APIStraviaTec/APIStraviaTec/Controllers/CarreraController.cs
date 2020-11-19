@@ -19,7 +19,7 @@ namespace APIStraviaTec.Controllers
     public class CarreraController : ControllerBase
     {
         private string serverKey = Startup.getKey();
-        [Route("createActivity")]
+        [Route("create")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
         public void crearCarrera([FromBody] Carrera carrera)
@@ -34,11 +34,29 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@nombcarr", NpgsqlTypes.NpgsqlDbType.Date, carrera.Nombrecarrera);
             command.Parameters.AddWithValue("@fechaevento", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Fechacarrera);
             command.Parameters.AddWithValue("@tipocarrera", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Tipoactividad);
-            command.Parameters.AddWithValue("@carreracategoria", NpgsqlTypes.NpgsqlDbType.Date, carrera.Categoria);
             command.Parameters.AddWithValue("@recorridocarrera", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Recorrido);
             command.Parameters.AddWithValue("@privacidad", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Privada);
             command.Parameters.AddWithValue("@precio", NpgsqlTypes.NpgsqlDbType.Date, carrera.Costo);
             command.Parameters.AddWithValue("@cuentabanc", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Cuentabancaria);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            conn.Close();
+            return;
+        }
+
+        [Route("categoria")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public void categoriaCarrera([FromBody] Carrera carrera)
+        {
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("asignarCategoriaCarrera", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Idcarrera);
+            command.Parameters.AddWithValue("@categ", NpgsqlTypes.NpgsqlDbType.Date, carrera.Categoria);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
@@ -149,6 +167,7 @@ namespace APIStraviaTec.Controllers
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Integer, user.Iddeportista);
             command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, user.Idcarrera);
+            command.Parameters.AddWithValue("@catCarr", NpgsqlTypes.NpgsqlDbType.Integer, user.Categoriacompite);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
@@ -175,24 +194,10 @@ namespace APIStraviaTec.Controllers
             {
                 while (dr.Read())
                 {
-                    usuario.Idusuario = (int)dr[0];
-                    usuario.Nombreusuario = dr[1].ToString();
-                    usuario.Contrasena = dr[2].ToString();
-                    usuario.Primernombre = dr[3].ToString();
-                    usuario.Apellidos = dr[4].ToString();
-                    usuario.Fechanacimiento = (DateTime)dr[5];
-                    usuario.Nacionalidad = dr[6].ToString();
-                    if (dr[7] == DBNull.Value)
-                    {
-                        usuario.Foto = null;
-                    }
-                    else
-                    {
-                        usuario.Foto = (string)dr[7];
-                    }
-                    usuario.Carrera = null;
-                    usuario.Reto = null;
-                    usuario.Grupo = null;
+                    usuario.Primernombre = dr[0].ToString();
+                    usuario.Apellidos = dr[1].ToString();
+                    usuario.Edad = (int)dr[2];
+                    usuario.Categoria = dr[3].ToString();
                     string json = JsonConvert.SerializeObject(usuario);
                     Usuarioret.Add(usuario);
 
@@ -208,6 +213,7 @@ namespace APIStraviaTec.Controllers
             conn.Close();
             return Usuarioret;
         }
+
         [Route("carrerasPorUsuario")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -262,6 +268,26 @@ namespace APIStraviaTec.Controllers
             }
             conn.Close();
             return CarrerasUser;
+        }
+
+        [Route("CarreraID")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public Object carreraID(Carrera carrera)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("obteneridcarrera", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@nombrecarr", NpgsqlTypes.NpgsqlDbType.Text, carrera.Nombrecarrera);
+            int resp = (int)command.ExecuteScalar();
+            var jsons = new[]
+                    {
+                        new {validacion = resp }
+            };
+
+            return jsons[0];
         }
 
         [Route("posicionesCarrera")]
@@ -355,6 +381,55 @@ namespace APIStraviaTec.Controllers
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
             return;
+        }
+
+        [Route("buscarCategoria")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> usuariosGrupo([FromBody] Carrera carrera)
+        {
+            List<Object> User = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarCategoriaCarrera", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, carrera.Idcarrera);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            categoriasCarrera = dr[0].ToString(),
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    User.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Grupo no encontrado");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < User.Count; x++)
+            {
+                var tempList = (IList<object>)User[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
         }
     }
 }

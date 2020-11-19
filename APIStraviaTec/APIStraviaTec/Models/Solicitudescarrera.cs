@@ -8,5 +8,6 @@ namespace APIStraviaTec.Models
         public int Idcarrera { get; set; }
         public int Idusuario { get; set; }
         public byte[] Recibo { get; set; }
+        public string Categoria { get; set; }
     }
 }

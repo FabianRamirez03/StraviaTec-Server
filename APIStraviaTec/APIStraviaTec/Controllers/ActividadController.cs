@@ -50,8 +50,8 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("modificarActividad", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@idgroup", NpgsqlTypes.NpgsqlDbType.Integer, actividad.Idactividad);
-            command.Parameters.AddWithValue("@nombgrup", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Nombreactividad);
+            command.Parameters.AddWithValue("@idact", NpgsqlTypes.NpgsqlDbType.Integer, actividad.Idactividad);
+            command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Nombreactividad);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
@@ -60,7 +60,7 @@ namespace APIStraviaTec.Controllers
         [Route("addActivity")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public void agregarActividad([FromBody] Actividad actividad)
+        public void agregarActividad([FromBody] Actividaddeportista actividad)
         {
             //Connect to a PostgreSQL database
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
@@ -68,9 +68,37 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("crearActividad", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Iddeportista);
             command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Nombreactividad);
+            command.Parameters.AddWithValue("@kilom", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Kilometraje);
+            command.Parameters.AddWithValue("@alt", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Altura);
+            command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Date, actividad.Mapa);
+            command.Parameters.AddWithValue("@tiempo", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Duracion);
             command.Parameters.AddWithValue("@fechaact", NpgsqlTypes.NpgsqlDbType.Date, actividad.Fecha);
-            command.Parameters.AddWithValue("@idadmin", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Tipoactividad);
+            command.Parameters.AddWithValue("@tipo", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Tipoactividad);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            conn.Close();
+            return;
+        }
+
+        [Route("actualizarActivity")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public void actualizarActividad([FromBody] Actividaddeportista actividad)
+        {
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("crearActividad", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idact", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Idactividad);
+            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Iddeportista);
+            command.Parameters.AddWithValue("@dist", NpgsqlTypes.NpgsqlDbType.Date, actividad.Kilometraje);
+            command.Parameters.AddWithValue("@alt", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Altura);
+            command.Parameters.AddWithValue("@tiempo", NpgsqlTypes.NpgsqlDbType.Date, actividad.Duracion);
+            command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Mapa);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
@@ -260,31 +288,5 @@ namespace APIStraviaTec.Controllers
             return CarrerasUser;
         }
 
-        [Route("ActID")]
-        [EnableCors("AnotherPolicy")]
-        [HttpPost]
-        public List<Actividad> PostActId([FromBody] Actividad actividad)
-        {
-            List<Actividad> Activiret = new List<Actividad>();
-            //Connect to a PostgreSQL database
-            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
-            conn.Open();
-            // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("buscarActividadNombre", conn);
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Nombreactividad);
-            try
-            {
-                actividad.Idactividad = (int)command.ExecuteScalar(); ;
-
-            }
-            catch
-            {
-                Debug.WriteLine("actividad no encontrada");
-
-            }
-            conn.Close();
-            return Activiret;
-        }
     }
 }

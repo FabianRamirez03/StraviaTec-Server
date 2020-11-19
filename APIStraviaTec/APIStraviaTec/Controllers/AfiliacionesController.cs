@@ -31,6 +31,7 @@ namespace APIStraviaTec.Controllers
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idusuario);
             command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idcarrera);
+            command.Parameters.AddWithValue("@catCarr", NpgsqlTypes.NpgsqlDbType.Text, usuario.Categoria);
             command.ExecuteScalar();
         }
         [Route("acceptAfiliacion")]
@@ -43,8 +44,9 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("aceptarSolicitud", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idcarrera);
-            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idusuario);
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idcarrera);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            command.Parameters.AddWithValue("@categoria", NpgsqlTypes.NpgsqlDbType.Text, usuario.Categoria);
             command.ExecuteScalar();
         }
 
@@ -58,8 +60,9 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("enviarSolicitudCarrera", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idcarrera);
-            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Text, usuario.Idusuario);
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idcarrera);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            command.Parameters.AddWithValue("@categoria", NpgsqlTypes.NpgsqlDbType.Text, usuario.Categoria);
             command.Parameters.AddWithValue("@recib", NpgsqlTypes.NpgsqlDbType.Bytea, usuario.Recibo);
             command.ExecuteScalar();
         }

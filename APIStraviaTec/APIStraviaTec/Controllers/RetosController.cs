@@ -80,6 +80,26 @@ namespace APIStraviaTec.Controllers
             }
             return retornar;
         }
+
+        [Route("AddPatrocinador")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public void modificarActividad([FromBody] Patrocinadoresreto reto)
+        {
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("agregarPatrocinadorReto", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idret", NpgsqlTypes.NpgsqlDbType.Integer, reto.Idreto);
+            command.Parameters.AddWithValue("@nombrepatrocinador", NpgsqlTypes.NpgsqlDbType.Varchar, reto.Nombrecomercial);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            conn.Close();
+            return;
+        }
+
         [Route("addUser")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]

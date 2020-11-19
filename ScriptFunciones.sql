@@ -277,15 +277,16 @@ Language sql
 --*************************ACTIVIDAD*************************
 
 --Crear actividad 
-create or replace function crearActividad (iddep integer, nombre varchar, fechaact timestamp, tipo varchar) returns void
+create or replace function crearActividad (iddep integer, nombre varchar, kilom varchar, alt varchar, mapa varchar, tiempo varchar, fechaact timestamp, tipo varchar)
+returns void
 as
 $$
-insert into actividad (nombreactividad, fecha, tipoactividad) 
+insert into actividad (nombreactividad, fecha, tipoactividad)
 values (nombre, fechaact, tipo);
-insert into actividadDeportista (idactividad, iddeportista) values ((select idactividad from buscaractividadnombre(nombre)), iddep );
+insert into actividadDeportista (idactividad, iddeportista, kilometraje, altura, recorrido, duracion )
+values ((select idactividad from buscaractividadnombre(nombre)), iddep, kilom, alt, mapa, tiempo);
 $$
 Language sql
-select * from actividadDeportista
 
 
 --Modificar el nombre de una Actividad

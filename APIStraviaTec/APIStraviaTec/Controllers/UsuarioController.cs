@@ -119,6 +119,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@nacimiento", NpgsqlTypes.NpgsqlDbType.Date, usuario.Fechanacimiento);
             command.Parameters.AddWithValue("@pais", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nacionalidad);
             command.Parameters.AddWithValue("@imagen", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Foto);
+            command.Parameters.AddWithValue("@administra", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Administra);
 
             // Execute the query and obtain a result set
             command.ExecuteNonQuery();
@@ -127,19 +128,39 @@ namespace APIStraviaTec.Controllers
             return usuario;
         }
 
-        [Route("porUsuarioName")]
+        [Route("existeUser")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public List<Usuario> PostUsuarioName([FromBody] Usuario usuario)
+        public Object existUsuario(Usuario usuario)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("validacionDeUsuario", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@nombuser", NpgsqlTypes.NpgsqlDbType.Text, usuario.Nombreusuario);
+            bool resp = (Boolean)command.ExecuteScalar();
+            var jsons = new[]
+                    {
+                        new {validacion = resp }
+            };
+
+            return jsons[0];
+        }
+
+        [Route("buscarUsuario")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Usuario> PostbuscaUsuario([FromBody] Usuario usuario)
         {
             List<Usuario> Usuarioret = new List<Usuario>();
             //Connect to a PostgreSQL database
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
             // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("buscarUsuarioNombre", conn);
+            NpgsqlCommand command = new NpgsqlCommand("buscaUsuarioSimilar", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
+            command.Parameters.AddWithValue("@nombBusc", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             try
@@ -153,14 +174,7 @@ namespace APIStraviaTec.Controllers
                     usuario.Apellidos = dr[4].ToString();
                     usuario.Fechanacimiento = (DateTime)dr[5];
                     usuario.Nacionalidad = dr[6].ToString();
-                    if (dr[7] == DBNull.Value)
-                    {
-                        usuario.Foto = null;
-                    }
-                    else
-                    {
-                        usuario.Foto = (String)dr[7];
-                    }
+                    usuario.Foto = (String)dr[7];
                     usuario.Carrera = null;
                     usuario.Reto = null;
                     usuario.Grupo = null;
@@ -180,104 +194,6 @@ namespace APIStraviaTec.Controllers
             return Usuarioret;
         }
 
-        [Route("porNombreUsuario")]
-        [EnableCors("AnotherPolicy")]
-        [HttpPost]
-        public Usuario buscarUsuariousername([FromBody] Usuario usuario)
-        {
-            Usuario Usuarioret = new Usuario();
-            //Connect to a PostgreSQL database
-            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
-            conn.Open();
-            // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("buscarUsuariousername", conn);
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nombreusuario);
-            // Execute the query and obtain a result set
-            NpgsqlDataReader dr = command.ExecuteReader();
-            try
-            {
-                while (dr.Read())
-                {
-                    Usuarioret.Idusuario = (int)dr[0];
-                    Usuarioret.Nombreusuario = dr[1].ToString();
-                    Usuarioret.Contrasena = dr[2].ToString();
-                    Usuarioret.Primernombre = dr[3].ToString();
-                    Usuarioret.Apellidos = dr[4].ToString();
-                    Usuarioret.Fechanacimiento = (DateTime)dr[5];
-                    Usuarioret.Nacionalidad = dr[6].ToString();
-                    Usuarioret.Foto = (string)dr[7];
-                    Usuarioret.Edad = (int)dr[8];
-                    Usuarioret.Categoria = dr[9].ToString();
-                    Usuarioret.Carrera = null;
-                    Usuarioret.Reto = null;
-                    Usuarioret.Grupo = null;
-                    string json = JsonConvert.SerializeObject(Usuarioret);
-
-
-                }
-
-            }
-            catch
-            {
-                Debug.WriteLine("Usuario no encontrado");
-
-            }
-            conn.Close();
-            return Usuarioret;
-        }
-        [Route("porUsuarioNP")]
-        [EnableCors("AnotherPolicy")]
-        [HttpPost]
-        public List<Usuario> PostUsuarioNP([FromBody] Usuario usuario)
-        {
-            List<Usuario> Usuarioret = new List<Usuario>();
-            //Connect to a PostgreSQL database
-            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
-            conn.Open();
-            // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("buscarUsuarioNombreApellido", conn);
-            command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
-            command.Parameters.AddWithValue("@apellido", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Apellidos);
-            // Execute the query and obtain a result set
-            NpgsqlDataReader dr = command.ExecuteReader();
-            try
-            {
-                while (dr.Read())
-                {
-                    usuario.Idusuario = (int)dr[0];
-                    usuario.Nombreusuario = dr[1].ToString();
-                    usuario.Contrasena = dr[2].ToString();
-                    usuario.Primernombre = dr[3].ToString();
-                    usuario.Apellidos = dr[4].ToString();
-                    usuario.Fechanacimiento = (DateTime)dr[5];
-                    usuario.Nacionalidad = dr[6].ToString();
-                    if (dr[7] == DBNull.Value)
-                    {
-                        usuario.Foto = null;
-                    }
-                    else
-                    {
-                        usuario.Foto = (String)dr[7];
-                    }
-                    usuario.Carrera = null;
-                    usuario.Reto = null;
-                    usuario.Grupo = null;
-                    string json = JsonConvert.SerializeObject(usuario);
-                    Usuarioret.Add(usuario);
-                }
-
-            }
-            catch 
-            {
-                Debug.WriteLine("Producto no encontrado");
-
-            }
-            
-            conn.Close();
-            return Usuarioret;
-        }
         [Route("modificarUsuario")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -315,15 +231,16 @@ namespace APIStraviaTec.Controllers
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
             // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("eliminarUsuarioNombre", conn);
+            NpgsqlCommand command = new NpgsqlCommand("eliminarUsuarioID", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nombreusuario);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
             command.ExecuteNonQuery();
             Debug.WriteLine("Usuario eliminado exitosamente");
             conn.Close();
             return Usuarioret;
         }
+
         [Route("friendsActivity")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -432,6 +349,56 @@ namespace APIStraviaTec.Controllers
             }
             return retornar;
         }
+
+        [Route("Groups")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> gruposUsuario([FromBody] Usuario usuario)
+        {
+            List<Object> User = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarGruposUsuario", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idUser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombreGrupo = dr[0].ToString(),
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    User.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Grupo no encontrado");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < User.Count; x++)
+            {
+                var tempList = (IList<object>)User[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
         [Route("friendsRetos")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
@@ -497,11 +464,11 @@ namespace APIStraviaTec.Controllers
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
             // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("validacionDeUsuario", conn);
+            NpgsqlCommand command = new NpgsqlCommand("tipoCuentaUsuario", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Text, usuario.Nombreusuario);
             command.Parameters.AddWithValue("@clave", NpgsqlTypes.NpgsqlDbType.Text, usuario.Contrasena);
-            bool resp = (Boolean) command.ExecuteScalar();
+            int resp = (int) command.ExecuteScalar();
             var jsons = new[]
                     {
                         new {validacion = resp }

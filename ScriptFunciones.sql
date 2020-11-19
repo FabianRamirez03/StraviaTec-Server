@@ -286,13 +286,13 @@ Language sql
 --*************************ACTIVIDAD*************************
 
 --Crear actividad 
-create or replace function crearActividad (iddep integer, nombre varchar, kilom varchar, alt varchar, mapa varchar, tiempo varchar, fechaact timestamp, tipo varchar)
+create or replace function crearActividad (iddep integer, nombre varchar, kilom varchar, alt varchar, mapa varchar, tiempo varchar, fechaact timestamp) 
 returns void
 as
 $$
-insert into actividad (nombreactividad, fecha, tipoactividad)
+insert into actividad (nombreactividad, fecha, tipoactividad) 
 values (nombre, fechaact, tipo);
-insert into actividadDeportista (idactividad, iddeportista, kilometraje, altura, recorrido, duracion )
+insert into actividadDeportista (idactividad, iddeportista, kilometraje, altura, recorrido, duracion ) 
 values ((select idactividad from buscaractividadnombre(nombre)), iddep, kilom, alt, mapa, tiempo);
 $$
 Language sql
@@ -565,18 +565,6 @@ Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr;
 $$
 Language sql
 
---Crear un nuevo reto
-create or replace function crearReto (
-	idorga int, nombreto varchar,obj varchar, fechainc timestamp, fechafin timestamp, tipoact varchar,
-	tiporet varchar, privacidad boolean) 
-	returns void
-	as
-	$$
-	insert into Reto (idorganizador, nombreReto, objetivoReto, fechainicio, fechafinaliza, tipoactividad,
-					  tiporeto, privada) 
-	values (idorga, nombreto, obj, fechainc, fechafin, tipoact, tiporet, privacidad);
-	$$
-Language sql
 
 --Actualizar datos de un usuario en una carrera
 create or replace function actualizarDatosCarreraUsuario 
@@ -742,7 +730,7 @@ $$
 insert into usuariosReto (iddeportista,idreto) values (iddep, idret)
 $$
 Language sql
-
+select * from usuario
 
 --Eliminar un usuario de un reto
 create or replace function eliminarUsuarioReto (iddep integer, idret integer) returns void

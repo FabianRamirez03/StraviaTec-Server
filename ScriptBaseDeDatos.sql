@@ -13,8 +13,9 @@ create table usuario(
 	foto text default '',
 	edad integer default 0,
 	categoria text default '',
-	administrador integer default 1
-); 
+	administrador integer default 1;
+);
+
 
 create table AmigosUsuario(
 	idDeportista int not null,

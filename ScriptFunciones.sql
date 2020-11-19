@@ -148,6 +148,26 @@ $$
 Language sql
 
 
+--Ver todos los grupos que existen
+create or replace function buscarGrupos() returns table (nombreGrupo varchar, nombreAdmin varchar, apellidoAdmin varchar)
+as
+$$
+select gr.nombre, ad.primerNombre, ad.apellidos from grupo as gr
+inner join usuario as ad on gr.idadministrador = ad.idusuario
+$$
+Language sql
+
+
+--Ver los grupos a los q pertenece un usuario
+create or replace function buscarGruposUsuario(idUser integer)returns table (nombreGrupo varchar)
+as
+$$
+select gr.nombre from grupo as gr
+inner join usuariosPorGrupo as ug on gr.idgrupo = ug.idgrupo and ug.idusuario = idUser;
+$$
+Language sql
+
+
 --Agregar usuario a un grupo por el id del usuario y el id del grupo
 create or replace function agregarUsuarioGrupo (iduser integer, idgroup integer)
 returns void

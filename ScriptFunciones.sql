@@ -1,8 +1,12 @@
 --Creacion de funciones
 
 --*************************USUARIO*************************
---Crear un usuario
-CREATE OR REPLACE FUNCTION crearUsuario (username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar, imagen bytea) RETURNS void AS $$
+/*Crear un usuario 
+1 -> deportista
+2 -> administrador
+*/
+CREATE OR REPLACE FUNCTION crearUsuario (username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar,
+										 imagen bytea, administra integer) RETURNS void AS $$
 DECLARE
 	age INTEGER;
 	categ varchar;
@@ -15,11 +19,11 @@ BEGIN
 	elseif age > 41 and age < 50 then categ = 'Master-B';
 	elseif age > 51 then categ = 'Master-C';
 end if;
-insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNacimiento, nacionalidad, foto, edad, categoria) 
-values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ);
+insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNacimiento, nacionalidad, foto, edad, categoria,admnistrador) 
+values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, administra);
 END;
 $$ LANGUAGE plpgsql;
-
+select * from usuario
 
 --Verifica si ya existe un nombre de usuario
 create or replace function verificarUsuarioExiste (nombuser varchar) returns boolean
@@ -50,12 +54,33 @@ or Upper (nombreusuario) like '%' ||Upper(nombBusc)|| '%'
 $$ LANGUAGE sql;
 
 
+/* Indica si un usuario existe y si es administrador o deportista
+0 -> no existe
+1 -> deportista
+2 -> administrador
+*/
+create or replace function tipoCuentaUsuario (username varchar, clave varchar) returns integer
+as
+$$
+declare exist boolean := validarCuenta (username, clave);
+declare tipo integer;
+Begin
+	If (exist) then tipo := (select administrador from usuario where nombreusuario = username and contrasena = clave);
+	Else
+		tipo := 0;
+	end if;
+	return tipo;
+End;
+$$
+Language plpgsql
+
+
 --Validacion de usuario y contrasena
-create or replace function validacionDeUsuario (username varchar, clave varchar)
+create or replace function validarCuenta (username varchar, clave varchar)
 returns boolean
 as
 $$
-select exists (select from Usuario where nombreUsuario = username and contrasena = clave)
+select exists (select from Usuario where nombreUsuario = username and contrasena = clave);
 $$
 Language sql
 
@@ -148,7 +173,7 @@ $$
 Language sql
 
 
---Ver todos los grupos que existen
+--Ver todos los grupos disponibles que existen
 create or replace function buscarGrupos() returns table (nombreGrupo varchar, nombreAdmin varchar, apellidoAdmin varchar)
 as
 $$
@@ -158,7 +183,7 @@ $$
 Language sql
 
 
---Ver los grupos a los q pertenece un usuario
+--Ver los grupos a los que pertenece un usuario
 create or replace function buscarGruposUsuario(idUser integer)returns table (nombreGrupo varchar)
 as
 $$

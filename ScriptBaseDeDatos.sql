@@ -12,7 +12,8 @@ create table usuario(
 	nacionalidad text default 'No indica' ,
 	foto text default '',
 	edad integer default 0,
-	categoria text default ''
+	categoria text default '',
+	administrador integer default 1;
 );
 
 
@@ -48,11 +49,13 @@ create table Grupo(
 	idAdministrador int not null	
 );
 
+
 create table usuariosPorGrupo(
 	idUsuario int not null,
 	idGrupo int not null,
 	primary key (idUsuario, idGrupo)
 );
+
 
 create table CarrerasGrupo(
 	idGrupo int not null,
@@ -60,11 +63,13 @@ create table CarrerasGrupo(
 	primary key (idGrupo,idCarrera)
 );
 
+
 create table RetosGrupo(
 	idGrupo int not null,
 	idReto int not null,
 	primary key (idGrupo,idReto)
 );
+
 
 create table Carrera(
 	idCarrera serial primary key not null,
@@ -184,6 +189,7 @@ foreign key (idOrganizador) references usuario (idUsuario);
 alter table Carrera
 add constraint UQ_nombreCarrera
 unique (nombreCarrera);
+
 
 --Tabla Reto
 alter table Reto

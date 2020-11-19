@@ -13,11 +13,8 @@ create table usuario(
 	foto text default '',
 	edad integer default 0,
 	categoria text default '',
-	administrador integer default 1;
-);
-alter table usuario add column categoria text ;
-alter table usuario alter column edad set default 0;
-select * from usuario
+	administrador integer default 1
+); 
 
 create table AmigosUsuario(
 	idDeportista int not null,

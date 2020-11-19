@@ -97,15 +97,15 @@ select agregarRetoGrupo(1,3);
 
 --Agregar un usuario a un reto por el id del deportista y el id del reto
 select agregarUsuarioReto (3,1);
-select agregarUsuarioReto (2,1)
+select agregarUsuarioReto (2,1);
 select agregarUsuarioReto (4,2);
 select agregarUsuarioReto (2,2);
 
 
 --Agregar patrocinadores a un reto por el id del reto y el nombre del patrocinador
-select agregarPatrocinadorReto(1,'Piros')
-select agregarPatrocinadorReto(2,'San Antonio')
-select agregarPatrocinadorReto(2,'On wheels')
+select agregarPatrocinadorReto(1,'Piros');
+select agregarPatrocinadorReto(2,'San Antonio');
+select agregarPatrocinadorReto(2,'On wheels');
 
 
 

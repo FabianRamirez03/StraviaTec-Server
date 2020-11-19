@@ -19,11 +19,11 @@ BEGIN
 	elseif age > 41 and age < 50 then categ = 'Master-B';
 	elseif age > 51 then categ = 'Master-C';
 end if;
-insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNacimiento, nacionalidad, foto, edad, categoria,admnistrador) 
+insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNacimiento, nacionalidad, foto, edad, categoria,administrador) 
 values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, administra);
 END;
 $$ LANGUAGE plpgsql;
-select * from usuario
+
 
 --Verifica si ya existe un nombre de usuario
 create or replace function verificarUsuarioExiste (nombuser varchar) returns boolean

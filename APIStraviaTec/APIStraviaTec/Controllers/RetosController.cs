@@ -44,7 +44,7 @@ namespace APIStraviaTec.Controllers
                         new {
                             IdDeportista=(int)dr[0],
                             nombreUsuario = dr[1].ToString(),
-                            idCarrera = (int)dr[2],
+                            idReto = (int)dr[2],
                             nombreReto = dr[3].ToString(),
                             objetivo = dr[4].ToString(),
                             tipoActividad = dr[5].ToString(),

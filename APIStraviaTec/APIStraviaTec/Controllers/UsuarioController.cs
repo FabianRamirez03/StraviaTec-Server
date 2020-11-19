@@ -350,6 +350,54 @@ namespace APIStraviaTec.Controllers
             return retornar;
         }
 
+        [Route("porNombreUsuario")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public Usuario buscarUsuariousername([FromBody] Usuario usuario)
+        {
+            Usuario Usuarioret = new Usuario();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarUsuariousername", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@username", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nombreusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    Usuarioret.Idusuario = (int)dr[0];
+                    Usuarioret.Nombreusuario = dr[1].ToString();
+                    Usuarioret.Contrasena = dr[2].ToString();
+                    Usuarioret.Primernombre = dr[3].ToString();
+                    Usuarioret.Apellidos = dr[4].ToString();
+                    Usuarioret.Fechanacimiento = (DateTime)dr[5];
+                    Usuarioret.Nacionalidad = dr[6].ToString();
+                    Usuarioret.Foto = (string)dr[7];
+                    Usuarioret.Edad = (int)dr[8];
+                    Usuarioret.Categoria = dr[9].ToString();
+                    Usuarioret.Administra = (int)dr[10];
+                    Usuarioret.Carrera = null;
+                    Usuarioret.Reto = null;
+                    Usuarioret.Grupo = null;
+                    string json = JsonConvert.SerializeObject(Usuarioret);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Usuario no encontrado");
+
+            }
+            conn.Close();
+            return Usuarioret;
+        }
+
         [Route("Groups")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]

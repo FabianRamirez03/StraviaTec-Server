@@ -167,7 +167,7 @@ namespace APIStraviaTec.Controllers
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Integer, user.Iddeportista);
             command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, user.Idcarrera);
-            command.Parameters.AddWithValue("@catCarr", NpgsqlTypes.NpgsqlDbType.Integer, user.Categoriacompite);
+            command.Parameters.AddWithValue("@catCarr", NpgsqlTypes.NpgsqlDbType.Varchar, user.Categoriacompite);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();

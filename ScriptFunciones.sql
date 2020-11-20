@@ -45,13 +45,24 @@ Language sql
 
 
 --Buscar usuario por nombre, apellido o nombre de usuario
-create or replace function buscaUsuarioSimilar (nombBusc varchar) RETURNS table (idUsuario integer, nombreUsuario varchar, primerNombre varchar, apellido varchar) 
+create or replace function buscaUsuarioSimilar (nombbusc varchar) RETURNS table
+(idUsuario integer, nombreUsuario varchar, primerNombre varchar, apellido varchar, foto varchar)
 AS $$
-select idusuario, nombreusuario, primernombre, apellidos from usuario
-where Upper (primernombre) like '%' ||Upper(nombBusc)|| '%' 
-or Upper (apellidos) like '%' ||Upper(nombBusc)|| '%'
-or Upper (nombreusuario) like '%' ||Upper(nombBusc)|| '%'
+select idusuario, nombreusuario, primernombre, apellidos, foto from usuario
+where Upper (primernombre) like '%' ||Upper(nombbusc)|| '%'
+or Upper (apellidos) like '%' ||Upper(nombbusc)|| '%'
+or Upper (nombreusuario) like '%' ||Upper(nombbusc)|| '%'
 $$ LANGUAGE sql;
+
+
+--Validacion de usuario y contrasena
+create or replace function validarCuenta (username varchar, clave varchar)
+returns boolean
+as
+$$
+select exists (select from Usuario where nombreUsuario = username and contrasena = clave);
+$$
+Language sql
 
 
 /* Indica si un usuario existe y si es administrador o deportista
@@ -73,16 +84,6 @@ Begin
 End;
 $$
 Language plpgsql
-
-
---Validacion de usuario y contrasena
-create or replace function validarCuenta (username varchar, clave varchar)
-returns boolean
-as
-$$
-select exists (select from Usuario where nombreUsuario = username and contrasena = clave);
-$$
-Language sql
 
 
 --Agregar amigos a un usuario por id
@@ -270,6 +271,7 @@ from reto as rt
 	where rg.idgrupo = idgr;
 $$
 Language sql
+
 --*************************GRUPO*************************
 
 
@@ -377,12 +379,13 @@ Language sql
 
 -- Ver actividades de los amigos del deportista 
 create or replace function actividadesAmigos (iduser int)
-returns table (nombreAmigo varchar, nombreActividad varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombreActividad varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre,nombreActividad,tipoactividad, fecha, kilometraje, altura, duracion, recorrido  from actividadesUsuarios() as actUser
+idusuario, primernombre, nombreActividad, tipoactividad, fecha, kilometraje, altura, duracion, recorrido 
+from actividadesUsuarios() as actUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = actUser.idusuario
 where iduser = amigUser.iddeportista
@@ -466,8 +469,20 @@ $$
 Language sql
 
 
+--Ver carreras disponibles segun la categoria del usuario
+create or replace function carrerasDisponibles (categoriausuario varchar) returns table(
+idCarrera integer, nombrecarrera varchar, fecha timestamp, tipo varchar, categoria varchar ,costo integer, cuenta varchar, mapa varchar)
+as
+$$
+select ca.idCarrera, ca.nombrecarrera, ca.fechacarrera, ca.tipoactividad,  cc.categoria, ca.costo, ca.cuentabancaria, ca.recorrido from carrera as ca
+inner join categoriacarrera as cc on cc.idcarrera = ca.idcarrera
+where categoriausuario = cc.categoria or cc.categoria = 'Elite' and ca.privada = 'false';
+$$
+Language sql
+
+
 --Buscar la categoria de una carrera a partir de su id
-create or replace function buscarCategoriaCarrera (idcarr integer) returns table(categoriasCarrera varchar)
+create or replace function buscarCategoriaCarrera (idcarr integer) returns table (categoriasCarrera varchar)
 as
 $$
 select categoria from categoriaCarrera where idCarrera = idcarr;
@@ -484,6 +499,18 @@ create or replace function agregarPatrocinadorCarrera (idcarr int, nombrepatroci
 	select idcarr, nombrepatrocinador
 	where exists (select 1 from Patrocinador where nombreComercial = nombrepatrocinador);
 	$$
+Language sql
+
+
+--Ver patrocinadores de una carrera por id
+create or replace function buscarPatrocinadoresCarrera (idcarr integer) returns table
+(nombrePatrocinador varchar, representante varchar, logo varchar, telefono varchar )
+as
+$$
+select pc.nombrecomercial, pat.representante, pat.logo, pat.numerotelefono  from patrocinador as pat
+inner join patrocinadorescarrera as pc on pc.nombrecomercial = pat.nombrecomercial
+where pc.idcarrera = idcarr 
+$$
 Language sql
 
 
@@ -591,12 +618,13 @@ Language sql
 
 --Ver carreras de los amigos del deportista por medio del ID
 create or replace function carrerasAmigos (iduser int)
-returns table (nombreAmigo varchar, nombrecarrera varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombrecarrera varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre, nombrecarrera, tipoactividad, fechacarrera, kilometraje, altura, duracion, recorrido  from carrerasUsuarios() as carrUser
+idusuario, primernombre, nombrecarrera, tipoactividad, fechacarrera, kilometraje, altura, duracion, recorrido
+from carrerasUsuarios() as carrUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = carrUser.idusuario
 where iduser = amigUser.iddeportista
@@ -703,6 +731,18 @@ create or replace function agregarPatrocinadorReto (idret int, nombrepatrocinado
 Language sql
 
 
+--Ver patrocinadores de un reto por id
+create or replace function buscarPatrocinadoresReto (idret integer) returns table
+(nombrePatrocinador varchar, representante varchar, logo varchar, telefono varchar )
+as
+$$
+select pr.nombrecomercial, pat.representante, pat.logo, pat.numerotelefono  from patrocinador as pat
+inner join patrocinadoresreto as pr on pr.nombrecomercial = pat.nombrecomercial
+where pr.idreto = idret 
+$$
+Language sql
+
+
 --Agregar usuario a un reto
 create or replace function agregarUsuarioReto(iddep integer, idret integer) returns void
 as
@@ -729,6 +769,17 @@ as
 $$
 select * from retosUsuarios()
 where idusuario = iduser
+$$
+Language sql
+
+
+--Ver retos disponibles segun la categoria del usuario
+create or replace function retosDisponibles (iduser integer) returns table(
+idReto integer, nombreReto varchar, fechaInicio timestamp, fechaFin timestamp, tipoActividad varchar, tipoReto varchar, objetivo varchar)
+as
+$$
+select r.idReto, r.nombrereto, r.fechainicio, r.fechafinaliza, r.tipoactividad, r.tiporeto, r.objetivoreto from reto as r
+where r.privada = 'false';
 $$
 Language sql
 
@@ -765,18 +816,20 @@ Language sql
 
 -- Ver retos de los amigos del deportista
 create or replace function retosAmigos (iduser int)
-returns table (nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre, nombreReto, tiporeto, tipoactividad, fechainicio, kilometraje, altura, duracion, recorrido  from retosUsuarios() as retUser
+idusuario, primernombre, nombreReto, tiporeto, tipoactividad, fechainicio, kilometraje, altura, duracion, recorrido
+from retosUsuarios() as retUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = retUser.idusuario
 where iduser = amigUser.iddeportista
 order by fechainicio desc
 $$
 Language sql
+
 --*************************Reto*************************
 
 
@@ -784,16 +837,30 @@ Language sql
 --*************************GENERAL*************************
 --Ver TODAS las actividades, carreras y retos de amigos
 create or replace function TodasActividadesAmigos(idusuario integer)
-returns table (NombreAmigo varchar, NombreAct varchar,tipoactividad varchar, fechaactividad timestamp, mapa varchar, KM_Recorridos varchar)
+returns table (idAmigo integer, NombreAmigo varchar, NombreAct varchar,tipoactividad varchar, fechaactividad timestamp, mapa varchar, KM_Recorridos varchar)
 as
 $$
-select nombreAmigo, nombreActividad, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from actividadesAmigos(idusuario)
+select idAmigo, nombreAmigo, nombreActividad, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from actividadesAmigos(idusuario)
 Union
-select nombreAmigo, nombrecarrera, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from carrerasAmigos(idusuario)
+select idAmigo, nombreAmigo, nombrecarrera, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from carrerasAmigos(idusuario)
 Union
-select nombreAmigo, nombreReto, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from retosAmigos(idusuario)
+select idAmigo, nombreAmigo, nombreReto, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from retosAmigos(idusuario)
 order by fecha desc
 $$
 Language sql
---*************************GENERAL*************************
 
+
+--Ver las actividades y la informacion de los amigos del usuario
+create or replace function verActividadesAmigos(idusuario integer) returns table
+(idAmigo integer, nombreUsuario varchar, nombreAmigo varchar, apellidoAmigo varchar, fotoAmigo varchar, nombreactividad varchar,
+tipoactividad varchar, fecha timestamp, mapa varchar, kilometraje varchar)
+as
+$$
+select ta.idamigo, u.nombreusuario, u.primernombre, u.apellidos, u.foto, ta.nombreact,
+ta.tipoactividad, ta.fechaactividad, ta.mapa, ta.km_recorridos from TodasActividadesAmigos(idusuario) as ta
+inner join usuario as u
+on u.idusuario = ta.idamigo
+$$
+Language sql
+
+--*************************GENERAL*************************

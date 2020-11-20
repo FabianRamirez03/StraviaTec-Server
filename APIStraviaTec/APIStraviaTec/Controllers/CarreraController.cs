@@ -275,6 +275,63 @@ namespace APIStraviaTec.Controllers
             return retornar;
         }
 
+
+        [Route("carrerasDisponbles")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> CarrerasDisponibles([FromBody] Usuario usuario)
+        {
+            List<Object> CarrerasUser = new List<Object>();
+            Usuarioscarrera usuarioCarrera = new Usuarioscarrera();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("carrerasDisponibles", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@categoriausuario", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Categoria);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            Idcarrera=(int)dr[0],
+                            nombrecarrera = dr[1].ToString(),
+                            fecha = (DateTime)dr[2],
+                            tipo = dr[3].ToString(),
+                            categoria = dr[4].ToString(),
+                            costo = (int)dr[5],
+                            cuenta = dr[6].ToString(),
+                            mapa = dr[7].ToString()
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    CarrerasUser.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("No hay carreras disponibles");
+
+            }
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < CarrerasUser.Count; x++)
+            {
+                var tempList = (IList<object>)CarrerasUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
         [Route("CarreraID")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]

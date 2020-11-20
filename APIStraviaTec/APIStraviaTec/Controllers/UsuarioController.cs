@@ -254,7 +254,7 @@ namespace APIStraviaTec.Controllers
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
             // Define a query returning a single row result set 
-            NpgsqlCommand command = new NpgsqlCommand("TodasActividadesAmigos", conn);
+            NpgsqlCommand command = new NpgsqlCommand("verActividadesAmigos", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
@@ -266,12 +266,15 @@ namespace APIStraviaTec.Controllers
                     var jsons = new[]
                     {
                         new {
-                            nombreAmigo = dr[0].ToString(),
-                            actividad = dr[1].ToString(),
-                            tipo = dr[2].ToString(),
-                            fecha = (DateTime) dr[3],
-                            mapa = dr[4].ToString(),
-                            kilometros = dr[5].ToString()
+                            idAmigo= (int)dr[0],
+                            nombreAmigo = dr[1].ToString(),
+                            apellidoAmigo = dr[2].ToString(),
+                            fotoAmigo = dr[3].ToString(),
+                            actividad = dr[4].ToString(),
+                            tipo = dr[5].ToString(),
+                            fecha = (DateTime) dr[6],
+                            mapa = dr[7].ToString(),
+                            kilometros = dr[8].ToString()
                         }
 
                      };

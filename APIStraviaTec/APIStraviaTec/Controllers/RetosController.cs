@@ -81,6 +81,61 @@ namespace APIStraviaTec.Controllers
             return retornar;
         }
 
+        [Route("retosDisponibles")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> retosDisponibles([FromBody] Usuario usuario)
+        {
+            List<Object> RetosUser = new List<Object>();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("retosDisponibles", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            idReto = (int)dr[0],
+                            nombreReto = dr[1].ToString(),
+                            fechaInicio = (DateTime)dr[2],
+                            fechaFinal = (DateTime)dr[3],
+                            tipoActividad = dr[4].ToString(),
+                            tipoReto = dr[5].ToString(),
+                            objetivo = dr[6].ToString()
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    RetosUser.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("No hay retos disponibles");
+
+            }
+            conn.Close();
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < RetosUser.Count; x++)
+            {
+                var tempList = (IList<object>)RetosUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
         [Route("AddPatrocinador")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]

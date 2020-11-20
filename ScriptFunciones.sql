@@ -677,7 +677,6 @@ $$
 Language sql
 
 
-
 --Ver posiciones de la carrera por medio del ID
 create or replace function posicionesCarrera (idcarr integer)
 returns table (NombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriadeportista varchar, tiempo varchar)

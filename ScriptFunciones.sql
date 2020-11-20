@@ -529,7 +529,6 @@ $$
 Language sql
 
 
-
 --Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
@@ -568,6 +567,18 @@ $$
 Language sql
 
 
+--Devuelve los recibos de la carrera por el id
+create or replace function verSolicitudes (idcarr integer) returns table
+(nombreCarrera varchar, idCarrera integer, nombreUsuario varchar, idUsuario integer, recibo varchar)
+as
+$$
+select ca.nombrecarrera, sc.idcarrera, u.nombreusuario, sc.idusuario, sc.recibo from carrera as ca
+inner join solicitudesCarrera as sc on ca.idcarrera = sc.idcarrera
+inner join usuario as u on u.idusuario = sc.idusuario
+$$
+Language sql
+
+
 --Eliminar un usuario de una carrera
 create or replace function eliminarUsuarioCarrera (iddep integer, idcarr integer) returns void
 as
@@ -575,6 +586,7 @@ $$
 Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr;
 $$
 Language sql
+
 
 --Crear un nuevo reto
 create or replace function crearReto (
@@ -588,6 +600,7 @@ create or replace function crearReto (
 	values (idorga, nombreto, obj, fechainc, fechafin, tipoact, tiporet, privacidad);
 	$$
 Language sql
+
 
 --Actualizar datos de un usuario en una carrera
 create or replace function actualizarDatosCarreraUsuario 

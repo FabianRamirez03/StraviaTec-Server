@@ -369,7 +369,7 @@ namespace APIStraviaTec.Controllers
         [Route("updateUserCarrera")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public void actualizarDatosCarreraUsuario(Usuarioscarrera reto)
+        public object actualizarDatosCarreraUsuario(Usuarioscarrera reto)
         {
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
             conn.Open();
@@ -385,7 +385,8 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Text, reto.Recorrido);
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
-            return;
+            string json = JsonConvert.SerializeObject(reto);
+            return json;
         }
 
         [Route("buscarCategoria")]

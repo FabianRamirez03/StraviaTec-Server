@@ -284,8 +284,13 @@ namespace APIStraviaTec.Controllers
                 Debug.WriteLine("Usuario no encontrado");
 
             }
-            conn.Close();
-            return CarrerasUser;
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < CarrerasUser.Count; x++)
+            {
+                var tempList = (IList<object>)CarrerasUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
         }
 
     }

@@ -267,14 +267,15 @@ namespace APIStraviaTec.Controllers
                     {
                         new {
                             idAmigo= (int)dr[0],
-                            nombreAmigo = dr[1].ToString(),
-                            apellidoAmigo = dr[2].ToString(),
-                            fotoAmigo = dr[3].ToString(),
-                            actividad = dr[4].ToString(),
-                            tipo = dr[5].ToString(),
-                            fecha = (DateTime) dr[6],
-                            mapa = dr[7].ToString(),
-                            kilometros = dr[8].ToString()
+                            nombreUsuario = dr[1].ToString(),
+                            nombreAmigo = dr[2].ToString(),
+                            apellidoAmigo = dr[3].ToString(),
+                            fotoAmigo = dr[4].ToString(),
+                            nombreactividad = dr[5].ToString(),
+                            tipo = dr[6].ToString(),
+                            fecha = (DateTime) dr[7],
+                            mapa = dr[8].ToString(),
+                            kilometros = dr[9].ToString()
                         }
 
                      };
@@ -415,7 +416,7 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("buscarGruposUsuario", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@idUser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
 

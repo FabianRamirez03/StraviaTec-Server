@@ -63,7 +63,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idcarrera);
             command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             command.Parameters.AddWithValue("@categoria", NpgsqlTypes.NpgsqlDbType.Text, usuario.Categoria);
-            command.Parameters.AddWithValue("@recib", NpgsqlTypes.NpgsqlDbType.Bytea, usuario.Recibo);
+            command.Parameters.AddWithValue("@recib", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Recibo);
             command.ExecuteScalar();
         }
     }

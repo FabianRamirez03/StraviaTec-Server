@@ -574,7 +574,8 @@ as
 $$
 select ca.nombrecarrera, sc.idcarrera, u.nombreusuario, sc.idusuario, sc.recibo from carrera as ca
 inner join solicitudesCarrera as sc on ca.idcarrera = sc.idcarrera
-inner join usuario as u on u.idusuario = sc.idusuario
+inner join usuario as u on sc.idusuario = u.idusuario
+where ca.idcarrera = idcarr
 $$
 Language sql
 

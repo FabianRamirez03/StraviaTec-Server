@@ -377,12 +377,13 @@ Language sql
 
 -- Ver actividades de los amigos del deportista 
 create or replace function actividadesAmigos (iduser int)
-returns table (nombreAmigo varchar, nombreActividad varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombreActividad varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre,nombreActividad,tipoactividad, fecha, kilometraje, altura, duracion, recorrido  from actividadesUsuarios() as actUser
+idusuario, primernombre, nombreActividad, tipoactividad, fecha, kilometraje, altura, duracion, recorrido 
+from actividadesUsuarios() as actUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = actUser.idusuario
 where iduser = amigUser.iddeportista
@@ -591,12 +592,13 @@ Language sql
 
 --Ver carreras de los amigos del deportista por medio del ID
 create or replace function carrerasAmigos (iduser int)
-returns table (nombreAmigo varchar, nombrecarrera varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombrecarrera varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre, nombrecarrera, tipoactividad, fechacarrera, kilometraje, altura, duracion, recorrido  from carrerasUsuarios() as carrUser
+idusuario, primernombre, nombrecarrera, tipoactividad, fechacarrera, kilometraje, altura, duracion, recorrido
+from carrerasUsuarios() as carrUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = carrUser.idusuario
 where iduser = amigUser.iddeportista
@@ -765,18 +767,20 @@ Language sql
 
 -- Ver retos de los amigos del deportista
 create or replace function retosAmigos (iduser int)
-returns table (nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,
+returns table (idAmigo integer, nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,
 			   fecha timestamp, kilometraje varchar, altura varchar, duracion varchar, recorrido varchar)
 as
 $$
 select 
-primernombre, nombreReto, tiporeto, tipoactividad, fechainicio, kilometraje, altura, duracion, recorrido  from retosUsuarios() as retUser
+idusuario, primernombre, nombreReto, tiporeto, tipoactividad, fechainicio, kilometraje, altura, duracion, recorrido
+from retosUsuarios() as retUser
 inner join amigosUsuario as amigUser 
 on amigUser.idamigo = retUser.idusuario
 where iduser = amigUser.iddeportista
 order by fechainicio desc
 $$
 Language sql
+
 --*************************Reto*************************
 
 
@@ -784,16 +788,30 @@ Language sql
 --*************************GENERAL*************************
 --Ver TODAS las actividades, carreras y retos de amigos
 create or replace function TodasActividadesAmigos(idusuario integer)
-returns table (NombreAmigo varchar, NombreAct varchar,tipoactividad varchar, fechaactividad timestamp, mapa varchar, KM_Recorridos varchar)
+returns table (idAmigo integer, NombreAmigo varchar, NombreAct varchar,tipoactividad varchar, fechaactividad timestamp, mapa varchar, KM_Recorridos varchar)
 as
 $$
-select nombreAmigo, nombreActividad, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from actividadesAmigos(idusuario)
+select idAmigo, nombreAmigo, nombreActividad, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from actividadesAmigos(idusuario)
 Union
-select nombreAmigo, nombrecarrera, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from carrerasAmigos(idusuario)
+select idAmigo, nombreAmigo, nombrecarrera, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from carrerasAmigos(idusuario)
 Union
-select nombreAmigo, nombreReto, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from retosAmigos(idusuario)
+select idAmigo, nombreAmigo, nombreReto, tipoactividad, fecha, cast(recorrido as varchar), kilometraje from retosAmigos(idusuario)
 order by fecha desc
 $$
 Language sql
---*************************GENERAL*************************
 
+
+--Ver las actividades y la informacion de los amigos del usuario
+create or replace function verActividadesAmigos(idusuario integer) returns table
+(idAmigo integer, nombreUsuario varchar, nombreAmigo varchar, apellidoAmigo varchar, fotoAmigo varchar, nombreactividad varchar,
+tipoactividad varchar, fecha timestamp, mapa varchar, kilometraje varchar)
+as
+$$
+select ta.idamigo, u.nombreusuario, u.primernombre, u.apellidos, u.foto, ta.nombreact,
+ta.tipoactividad, ta.fechaactividad, ta.mapa, ta.km_recorridos from TodasActividadesAmigos(idusuario) as ta
+inner join usuario as u
+on u.idusuario = ta.idamigo
+$$
+Language sql
+
+--*************************GENERAL*************************

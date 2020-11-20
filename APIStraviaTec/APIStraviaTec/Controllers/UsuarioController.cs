@@ -160,26 +160,28 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("buscaUsuarioSimilar", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@nombBusc", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
+            command.Parameters.AddWithValue("@nombbusc", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Primernombre);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             try
             {
                 while (dr.Read())
                 {
-                    usuario.Idusuario = (int)dr[0];
-                    usuario.Nombreusuario = dr[1].ToString();
-                    usuario.Contrasena = dr[2].ToString();
-                    usuario.Primernombre = dr[3].ToString();
-                    usuario.Apellidos = dr[4].ToString();
-                    usuario.Fechanacimiento = (DateTime)dr[5];
-                    usuario.Nacionalidad = dr[6].ToString();
-                    usuario.Foto = (String)dr[7];
-                    usuario.Carrera = null;
-                    usuario.Reto = null;
-                    usuario.Grupo = null;
-                    string json = JsonConvert.SerializeObject(usuario);
-                    Usuarioret.Add(usuario);
+                    Usuario interno = new Usuario();
+
+                    interno.Idusuario = (int)dr[0];
+
+                    interno.Nombreusuario = dr[1].ToString();
+
+                    interno.Primernombre = dr[2].ToString();
+
+                    interno.Apellidos = dr[3].ToString();
+
+                    interno.Foto = dr[4].ToString();
+
+                    string json = JsonConvert.SerializeObject(interno);
+
+                    Usuarioret.Add(interno);
 
 
                 }

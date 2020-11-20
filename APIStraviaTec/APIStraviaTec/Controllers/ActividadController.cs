@@ -60,7 +60,7 @@ namespace APIStraviaTec.Controllers
         [Route("addActivity")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public void agregarActividad([FromBody] Actividaddeportista actividad)
+        public Actividaddeportista agregarActividad([FromBody] Actividaddeportista actividad)
         {
             //Connect to a PostgreSQL database
             NpgsqlConnection conn = new NpgsqlConnection(serverKey);
@@ -68,18 +68,18 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("crearActividad", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Iddeportista);
+            command.Parameters.AddWithValue("@iddep", NpgsqlTypes.NpgsqlDbType.Integer, actividad.Iddeportista);
             command.Parameters.AddWithValue("@nombre", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Nombreactividad);
             command.Parameters.AddWithValue("@kilom", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Kilometraje);
             command.Parameters.AddWithValue("@alt", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Altura);
-            command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Date, actividad.Mapa);
+            command.Parameters.AddWithValue("@mapa", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Mapa);
             command.Parameters.AddWithValue("@tiempo", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Duracion);
             command.Parameters.AddWithValue("@fechaact", NpgsqlTypes.NpgsqlDbType.Date, actividad.Fecha);
             command.Parameters.AddWithValue("@tipo", NpgsqlTypes.NpgsqlDbType.Varchar, actividad.Tipoactividad);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
             conn.Close();
-            return;
+            return actividad;
         }
 
         [Route("actualizarActivity")]

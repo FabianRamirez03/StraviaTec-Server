@@ -665,16 +665,17 @@ Language sql
 
 --lista de participantes en la carrera
 create or replace function participantesCarrera (idcarr integer)
-returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaCompite varchar)
+returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaCompite varchar, foto varchar)
 as
 $$
-select cu.primernombre, cu.apellidos, u.edad, cu.categoria from carrerasUsuarios() as cu
+select cu.primernombre, cu.apellidos, u.edad, cu.categoria, u.foto from carrerasUsuarios() as cu
 inner join usuario as u
 on u.primernombre = cu.primernombre and u.apellidos = cu.apellidos
 where cu.idcarrera = idcarr
 order by cu.categoria
 $$
 Language sql
+
 
 
 --Ver posiciones de la carrera por medio del ID

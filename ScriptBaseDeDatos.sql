@@ -185,10 +185,6 @@ alter table Carrera
 add constraint FK_organizadorCarrera
 foreign key (idOrganizador) references usuario (idUsuario);
 
-alter table Carrera
-add constraint UQ_nombreCarrera
-unique (nombreCarrera);
-
 
 --Tabla Reto
 alter table Reto

@@ -25,11 +25,11 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-create or replace function buscarUsuarioid(iduser integer) returns usuario 
+create or replace function buscarUsuariousername(username varchar) returns usuario 
 as 
 $$
 Select * from usuario 
-where idusuario = iduser;
+where nombreusuario = username;
 $$
 Language sql
 

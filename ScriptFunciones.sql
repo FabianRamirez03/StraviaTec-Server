@@ -279,13 +279,26 @@ Language sql;
 
 --Ver carreras de un grupo por su id
 create or replace function buscarCarrerasGrupo(idgr integer) returns
-table (idCarrera int, idOrg int, nombCar varchar, fecha timestamp, tipo varchar, costo integer, cuenta varchar, mapa varchar)
+table (idCarrera int, idOrg int, nombCar varchar, categoria varchar, fecha timestamp, tipo varchar, costo integer, cuenta varchar, mapa varchar)
 as
 $$
-select ca.idCarrera, ca.idOrganizador, ca.nombreCarrera, ca.fechaCarrera, ca.tipoActividad, ca.costo, ca.cuentaBancaria, ca.recorrido 
+select ca.idCarrera, ca.idOrganizador, ca.nombreCarrera, cc.categoria, ca.fechaCarrera, ca.tipoActividad, ca.costo, ca.cuentaBancaria, ca.recorrido 
 from carrera as ca
 	inner join carrerasGrupo as cg on ca.idcarrera = cg.idcarrera
+	inner join categoriaCarrera as cc on cc.idcarrera = ca.idcarrera
 	where cg.idgrupo = idgr;
+$$
+Language sql;
+
+
+--Ver carreras disponibles en un grupo para un usuario especifico
+create or replace function carrerasGrupoDisponibles(idgr integer, iduser integer) returns table
+(idCarrera integer, idorganizador integer, nombrecarrera varchar, categoria varchar, fecha timestamp, tipo varchar, costo integer,
+cuenta varchar, mapa varchar)
+as
+$$
+select cg.idcarrera, cg.idorg, cg.nombcar, cg.categoria, cg.fecha, cg.tipo, cg.costo, cg.cuenta, cg.mapa from buscarCarrerasGrupo(idgr) as cg
+where cg.categoria = (select u.categoria from usuario as u where idusuario = iduser) or cg.categoria ='Elite' ;
 $$
 Language sql;
 

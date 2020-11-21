@@ -236,11 +236,11 @@ namespace APIStraviaTec.Controllers
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
-            Int64 seguidores = (Int64)command.ExecuteScalar();
+            int seguidores = (int)command.ExecuteScalar();
             NpgsqlCommand command2 = new NpgsqlCommand("cantSiguiendo", conn);
             command2.CommandType = System.Data.CommandType.StoredProcedure;
             command2.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
-            Int64 seguidos = (Int64)command2.ExecuteScalar();
+            int seguidos = (int)command2.ExecuteScalar();
 
             var jsons = new[]
                     {
@@ -459,7 +459,8 @@ namespace APIStraviaTec.Controllers
                     var jsons = new[]
                     {
                         new {
-                            nombreGrupo = dr[0].ToString(),
+                            Idgrupo= (int) dr[0],
+                            nombreGrupo = dr[1].ToString(),
                         }
 
                      };

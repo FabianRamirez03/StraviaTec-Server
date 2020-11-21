@@ -198,10 +198,10 @@ Language sql
 
 
 --Ver los grupos a los que pertenece un usuario
-create or replace function buscarGruposUsuario(idUser integer)returns table (nombreGrupo varchar)
+create or replace function buscarGruposUsuario(iduser integer)returns table (idGrupo integer, nombreGrupo varchar)
 as
 $$
-select gr.nombre from grupo as gr
+select gr.idgrupo, gr.nombre from grupo as gr
 inner join usuariosPorGrupo as ug on gr.idgrupo = ug.idgrupo and ug.idusuario = idUser;
 $$
 Language sql
@@ -238,7 +238,7 @@ Select gr.Nombre, u.idusuario, u.primernombre, u.Apellidos
 	on u.idusuario = ug.idusuario
 		inner join Grupo as gr
 		on gr.idgrupo = ug.idgrupo
-		where idgroup = gr.idGrupo
+		where idgroup = gr.idGrupo and gr.idadministrador != u.idusuario
 $$
 Language sql
 

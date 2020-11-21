@@ -573,9 +573,8 @@ $$
 Delete from solicitudesCarrera where idcarrera = idcarr and idusuario = iduser and categoriaCarrera = catCarr;
 $$
 Language sql
-select * from agregarUsuarioCarrera (11, 2, 'Elite');
-select * from buscarCarrerasPorUsuaio(11)
-select * from participantesCarrera(2)
+
+
 --Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
@@ -632,11 +631,11 @@ Language sql
 --Ver las carreras de todos los usuario
 create or replace function CarrerasUsuarios () returns table (
 	idusuario int, primernombre varchar, apellidos varchar, categoria varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-	fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
+	fechacarrera timestamp, costo integer, cuenta varchar, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, d.apellidos, uc.categoriaCompite,uc.idcarrera, carr.nombrecarrera, carr.tipoactividad, carr.fechacarrera,
-		uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
+		carr.costo, carr.cuentabancaria, uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
 from usuario d
 inner join usuariosCarrera as uc
 	on d.idusuario = uc.iddeportista
@@ -667,7 +666,7 @@ Language sql
 --Ver carreras por ID del usuario
 create or replace function buscarCarrerasPorUsuaio (iduser integer)
 returns table (idusuario int, primernombre varchar, apellidos varchar, categoriaCompite varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-				fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
+fechacarrera timestamp, costo integer, cuenta varchar, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 select * from carrerasUsuarios() 

@@ -73,6 +73,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@idgroup", NpgsqlTypes.NpgsqlDbType.Integer, grupo.Idgrupo);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
+            Debug.WriteLine("Eliminado exitosamente");
             conn.Close();
             return;
         }
@@ -93,6 +94,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@nombgrup", NpgsqlTypes.NpgsqlDbType.Varchar, grupo.Nombre);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
+            Debug.WriteLine("Modificado exitosamente");            
             conn.Close();
             return;
         }

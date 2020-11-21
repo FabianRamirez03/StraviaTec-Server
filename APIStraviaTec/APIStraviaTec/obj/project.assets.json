@@ -5057,19 +5057,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\maria\\.nuget\\packages\\": {}
+    "C:\\Users\\ramir\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+      "projectUniqueName": "C:\\Users\\ramir\\Source\\Repos\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
       "projectName": "APIStraviaTec",
-      "projectPath": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
-      "packagesPath": "C:\\Users\\maria\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\maria\\OneDrive - Estudiantes ITCR\\Escritorio\\Computadores\\6 semestre\\bases\\Proyecto\\Proyecto1\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\obj\\",
+      "projectPath": "C:\\Users\\ramir\\Source\\Repos\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
+      "packagesPath": "C:\\Users\\ramir\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ramir\\Source\\Repos\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\maria\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ramir\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5134,7 +5134,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
   },

@@ -25,6 +25,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+create or replace function buscarUsuarioid(iduser integer) returns usuario 
+as 
+$$
+Select * from usuario 
+where idusuario = iduser;
+$$
+Language sql
+
 
 --Verifica si ya existe un nombre de usuario
 create or replace function verificarUsuarioExiste (nombuser varchar) returns boolean

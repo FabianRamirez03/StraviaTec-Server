@@ -223,6 +223,38 @@ namespace APIStraviaTec.Controllers
             return Usuarioret;
         }
 
+        [Route("getSeguidores")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public object getSeguidores([FromBody] Usuario usuario)
+        {
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("cantSeguidores", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            Int64 seguidores = (Int64)command.ExecuteScalar();
+            NpgsqlCommand command2 = new NpgsqlCommand("cantSiguiendo", conn);
+            command2.CommandType = System.Data.CommandType.StoredProcedure;
+            command2.Parameters.AddWithValue("@idusuario", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            Int64 seguidos = (Int64)command2.ExecuteScalar();
+
+            var jsons = new[]
+                    {
+                        new {
+                            Seguidores= seguidores,
+                            Seguidos = seguidos,
+                        }
+
+                     };
+
+            conn.Close();
+            return jsons;
+        }
+
         [Route("eliminarUsuario")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]

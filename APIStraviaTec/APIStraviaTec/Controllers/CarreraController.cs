@@ -194,10 +194,12 @@ namespace APIStraviaTec.Controllers
             {
                 while (dr.Read())
                 {
+                    usuario = new Usuario();
                     usuario.Primernombre = dr[0].ToString();
                     usuario.Apellidos = dr[1].ToString();
                     usuario.Edad = (int)dr[2];
                     usuario.Categoria = dr[3].ToString();
+                    usuario.Foto = dr[4].ToString();
                     string json = JsonConvert.SerializeObject(usuario);
                     Usuarioret.Add(usuario);
 

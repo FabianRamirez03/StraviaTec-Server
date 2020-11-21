@@ -6,7 +6,7 @@
 2 -> administrador
 */
 CREATE OR REPLACE FUNCTION crearUsuario (username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date, pais varchar,
-										 imagen bytea, administra integer) RETURNS void AS $$
+										 imagen varchar, administra integer) RETURNS void AS $$
 DECLARE
 	age INTEGER;
 	categ varchar;
@@ -23,6 +23,7 @@ insert into usuario (nombreUsuario,contrasena, primernombre, apellidos, fechaNac
 values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, administra);
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 --Verifica si ya existe un nombre de usuario
@@ -53,7 +54,7 @@ where Upper (primernombre) like '%' ||Upper(nombbusc)|| '%'
 or Upper (apellidos) like '%' ||Upper(nombbusc)|| '%'
 or Upper (nombreusuario) like '%' ||Upper(nombbusc)|| '%'
 $$ LANGUAGE sql;
-
+select * from usuario
 
 --Validacion de usuario y contrasena
 create or replace function validarCuenta (username varchar, clave varchar)
@@ -64,6 +65,18 @@ select exists (select from Usuario where nombreUsuario = username and contrasena
 $$
 Language sql
 
+
+create or replace function cantSeguidores(idusuario integer) returns integer as
+$$
+select count(*) from amigosusuario where iddeportista = idusuario
+$$
+Language sql
+
+create or replace function cantSiguiendo(idusuario integer) returns integer as
+$$
+select count(*) from amigosusuario where idamigo = idusuario
+$$
+Language sql
 
 /* Indica si un usuario existe y si es administrador o deportista
 0 -> no existe
@@ -95,10 +108,10 @@ select iduser, idamigo
 where exists (select 1 from usuario where idusuario = idamigo and iduser != idamigo); --Valida que el amigo exista antes de agregarlo
 $$
 Language sql
-
-
+select * from agregarAmigo(18,12)
+select * from usuario
 --Actualizar un usuario
-create or replace function modificarUsuario (iduser int,username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar,imagen bytea)
+create or replace function modificarUsuario (iduser int,username varchar, contra varchar, nombre varchar, apellido varchar, nacimiento date,pais varchar,imagen varchar)
 returns void
 as
 $$
@@ -515,7 +528,7 @@ Language sql
 
 
 --Agregar solicitud de afiliacion a una carrera
-create or replace function enviarSolicitudCarrera (idcarr int, iduser int, categoria varchar, recib bytea)
+create or replace function enviarSolicitudCarrera (idcarr int, iduser int, categoria varchar, recib varchar)
 returns void
 as
 $$
@@ -543,8 +556,9 @@ $$
 Delete from solicitudesCarrera where idcarrera = idcarr and idusuario = iduser and categoriaCarrera = catCarr;
 $$
 Language sql
-
-
+select * from agregarUsuarioCarrera (11, 2, 'Elite');
+select * from buscarCarrerasPorUsuaio(11)
+select * from participantesCarrera(2)
 --Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
@@ -647,10 +661,10 @@ Language sql
 
 --lista de participantes en la carrera
 create or replace function participantesCarrera (idcarr integer)
-returns table (nombreDeportista varchar, apellidoDeportista varchar, edad varchar, categoriaCompite varchar)
+returns table (nombreDeportista varchar, apellidoDeportista varchar, edad integer, categoriaCompite varchar, foto varchar)
 as
 $$
-select cu.primernombre, cu.apellidos, u.edad, cu.categoria from carrerasUsuarios() as cu
+select cu.primernombre, cu.apellidos, u.edad, cu.categoria, u.foto from carrerasUsuarios() as cu
 inner join usuario as u
 on u.primernombre = cu.primernombre and u.apellidos = cu.apellidos
 where cu.idcarrera = idcarr
@@ -813,7 +827,7 @@ inner join usuariosReto as ur
 $$
 Language sql
 
-
+select * from usuario
 -- Ver retos de los amigos del deportista
 create or replace function retosAmigos (iduser int)
 returns table (idAmigo integer, nombreAmigo varchar, nombreReto varchar, tiporeto varchar, tipoactividad varchar,

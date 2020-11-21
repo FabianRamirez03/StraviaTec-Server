@@ -167,7 +167,7 @@ create table PatrocinadoresCarrera(
 --Tabla usuario
 alter table usuario
 add constraint UQ_nombreUsuario
-unique (NombreUsuario)
+unique (NombreUsuario);
 
 
 --Tabla Grupo
@@ -193,5 +193,5 @@ foreign key (idOrganizador) references usuario (idUsuario);
 
 alter table Reto
 add constraint UQ_nombreUnico
-unique(nombreReto)
+unique(nombreReto);
 

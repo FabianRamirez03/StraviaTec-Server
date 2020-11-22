@@ -261,7 +261,7 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("buscarCarrerasGrupo", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@idgroup", NpgsqlTypes.NpgsqlDbType.Integer, grupo.Idgrupo);
+            command.Parameters.AddWithValue("@idgr", NpgsqlTypes.NpgsqlDbType.Integer, grupo.Idgrupo);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
 
@@ -275,11 +275,12 @@ namespace APIStraviaTec.Controllers
                             idCarrera = (int)dr[0],
                             idOrg = (int)dr[1],
                             nombCar = dr[2].ToString(),
-                            fecha = (DateTime) dr[3],
-                            tipo = dr[4].ToString(),
-                            costo = (int)dr[5],
-                            cuenta = dr[6].ToString(),
-                            mapa = dr[7].ToString(),
+                            fecha = (DateTime) dr[4],
+                            categoria = dr[3].ToString(),
+                            tipo = dr[5].ToString(),
+                            costo = (int)dr[6],
+                            cuenta = dr[7].ToString(),
+                            mapa = dr[8].ToString(),
                         }
 
                      };

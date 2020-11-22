@@ -278,6 +278,7 @@ namespace APIStraviaTec.Controllers
                             idOrg = (int)dr[1],
                             nombCar = dr[2].ToString(),
                             fecha = (DateTime) dr[3],
+                            categoria = dr[3].ToString(),
                             tipo = dr[4].ToString(),
                             costo = (int)dr[5],
                             cuenta = dr[6].ToString(),

@@ -23,7 +23,7 @@ namespace APIStraviaTec
 
         public static string getKey()
         {
-            return "Server=127.0.0.1;User Id=postgres; " + "Password=sarcu1209;Database=basedatosstraviatec;";
+            return "Server=127.0.0.1;User Id=postgres; " + "Password=password;Database=basedatosstraviatec;";
         }
 
         public IConfiguration Configuration { get; }

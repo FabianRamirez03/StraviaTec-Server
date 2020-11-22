@@ -24,7 +24,7 @@ values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, adm
 END;
 $$ LANGUAGE plpgsql;
 
-
+--Buscar usuarios por nombre de usuario
 create or replace function buscarUsuariousername(username varchar) returns usuario 
 as 
 $$
@@ -276,6 +276,7 @@ $$
 insert into RetosGrupo (idGrupo, idReto) values (idgroup, idret);
 $$
 Language sql;
+
 
 --Ver carreras de un grupo por su id
 create or replace function buscarCarrerasGrupo(idgr integer) returns
@@ -589,6 +590,15 @@ $$
 Language sql;
 
 
+--Funcion para ver solicitudes de una carrera por id
+create or replace function buscarSolicitudesCarrera(idcar integer) returns solicitudesCarrera
+as
+$$
+select * from solicitudesCarrera where idCarrera = idcar;
+$$
+Language sql;
+
+
 --Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
@@ -614,20 +624,6 @@ as
 $$
 Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr;
 $$
-Language sql;
-
-
---Crear un nuevo reto
-create or replace function crearReto (
-	idorga int, nombreto varchar,obj varchar, fechainc timestamp, fechafin timestamp, tipoact varchar,
-	tiporet varchar, privacidad boolean) 
-	returns void
-	as
-	$$
-	insert into Reto (idorganizador, nombreReto, objetivoReto, fechainicio, fechafinaliza, tipoactividad,
-					  tiporeto, privada) 
-	values (idorga, nombreto, obj, fechainc, fechafin, tipoact, tiporet, privacidad);
-	$$
 Language sql;
 
 

@@ -24,7 +24,7 @@ values (username, contra,nombre,apellido,nacimiento,pais, imagen, age,categ, adm
 END;
 $$ LANGUAGE plpgsql;
 
-
+--Buscar usuarios por nombre de usuario
 create or replace function buscarUsuariousername(username varchar) returns usuario 
 as 
 $$
@@ -62,7 +62,7 @@ where Upper (primernombre) like '%' ||Upper(nombbusc)|| '%'
 or Upper (apellidos) like '%' ||Upper(nombbusc)|| '%'
 or Upper (nombreusuario) like '%' ||Upper(nombbusc)|| '%'
 $$ LANGUAGE sql;
-select * from usuario;
+
 
 --Validacion de usuario y contrasena
 create or replace function validarCuenta (username varchar, clave varchar)
@@ -73,18 +73,6 @@ select exists (select from Usuario where nombreUsuario = username and contrasena
 $$
 Language sql;
 
-
-create or replace function cantSeguidores(idusuario integer) returns integer as
-$$
-select count(*) from amigosusuario where iddeportista = idusuario
-$$
-Language sql;
-
-create or replace function cantSiguiendo(idusuario integer) returns integer as
-$$
-select count(*) from amigosusuario where idamigo = idusuario
-$$
-Language sql;
 
 /* Indica si un usuario existe y si es administrador o deportista
 0 -> no existe
@@ -122,8 +110,20 @@ $$
 Language plpgsql;
 
 
+--Muestra la cantidad de personas que siguen al usuario
+create or replace function cantSiguiendo(idusuario integer) returns integer as
+$$
+select count(*) from amigosusuario where iddeportista = idusuario
+$$
+Language sql;
 
 
+--Muestra la cantidad de personas que sigue el usuario
+create or replace function cantSeguidores(idusuario integer) returns integer as
+$$
+select count(*) from amigosusuario where idamigo = idusuario
+$$
+Language sql;
 
 
 --Actualizar un usuario
@@ -162,21 +162,22 @@ Language sql;
 
 --*************************GRUPO*************************
 
---Crear un grupo y asignar el administrador
-create or replace function crearGrupo (nombgrup varchar, idadmin integer) returns void
-as
-$$
-insert into Grupo (nombre,idadministrador) values (nombgrup, idadmin);
-insert into usuariosPorGrupo (idusuario, idgrupo) values (idadmin, (select idgrupo from buscarGrupoNombre(nombgrup)) );
-$$
-Language sql;
-
 
 --Buscar grupo por nombre
 create or replace function buscarGrupoNombre (nombregrupo varchar) returns grupo
 as
 $$
 select * from grupo where nombre = nombregrupo;
+$$
+Language sql;
+
+
+--Crear un grupo y asignar el administrador
+create or replace function crearGrupo (nombgrup varchar, idadmin integer) returns void
+as
+$$
+insert into Grupo (nombre,idadministrador) values (nombgrup, idadmin);
+insert into usuariosPorGrupo (idusuario, idgrupo) values (idadmin, (select idgrupo from buscarGrupoNombre(nombgrup)) );
 $$
 Language sql;
 
@@ -221,6 +222,7 @@ select gr.idgrupo, gr.nombre from grupo as gr
 inner join usuariosPorGrupo as ug on gr.idgrupo = ug.idgrupo and ug.idusuario = idUser;
 $$
 Language sql;
+
 
 --Agregar usuario a un grupo por el id del usuario y el id del grupo
 create or replace function agregarUsuarioGrupo (iduser integer, idgroup integer)
@@ -275,15 +277,29 @@ insert into RetosGrupo (idGrupo, idReto) values (idgroup, idret);
 $$
 Language sql;
 
+
 --Ver carreras de un grupo por su id
 create or replace function buscarCarrerasGrupo(idgr integer) returns
-table (idCarrera int, idOrg int, nombCar varchar, fecha timestamp, tipo varchar, costo integer, cuenta varchar, mapa varchar)
+table (idCarrera int, idOrg int, nombCar varchar, categoria varchar, fecha timestamp, tipo varchar, costo integer, cuenta varchar, mapa varchar)
 as
 $$
-select ca.idCarrera, ca.idOrganizador, ca.nombreCarrera, ca.fechaCarrera, ca.tipoActividad, ca.costo, ca.cuentaBancaria, ca.recorrido 
+select ca.idCarrera, ca.idOrganizador, ca.nombreCarrera, cc.categoria, ca.fechaCarrera, ca.tipoActividad, ca.costo, ca.cuentaBancaria, ca.recorrido 
 from carrera as ca
 	inner join carrerasGrupo as cg on ca.idcarrera = cg.idcarrera
+	inner join categoriaCarrera as cc on cc.idcarrera = ca.idcarrera
 	where cg.idgrupo = idgr;
+$$
+Language sql;
+
+
+--Ver carreras disponibles en un grupo para un usuario especifico
+create or replace function carrerasGrupoDisponibles(idgr integer, iduser integer) returns table
+(idCarrera integer, idorganizador integer, nombrecarrera varchar, categoria varchar, fecha timestamp, tipo varchar, costo integer,
+cuenta varchar, mapa varchar)
+as
+$$
+select cg.idcarrera, cg.idorg, cg.nombcar, cg.categoria, cg.fecha, cg.tipo, cg.costo, cg.cuenta, cg.mapa from buscarCarrerasGrupo(idgr) as cg
+where cg.categoria = (select u.categoria from usuario as u where idusuario = iduser) or cg.categoria ='Elite' ;
 $$
 Language sql;
 
@@ -305,6 +321,17 @@ Language sql;
 
 
 --*************************ACTIVIDAD*************************
+
+
+--Buscar actividad por nombre
+create or replace function buscarActividadNombre (nombre varchar) returns actividad
+as
+$$
+Select * from actividad
+where Upper(nombreActividad) = Upper(nombre);
+$$
+Language sql;
+
 
 --Crear actividad 
 create or replace function crearActividad (iddep integer, nombre varchar, kilom varchar, alt varchar, mapa varchar, tiempo varchar, fechaact timestamp, tipo varchar)
@@ -347,16 +374,6 @@ as
 $$
 Update actividadDeportista set kilometraje = dist, altura = alt, duracion = tiempo, recorrido = mapa
 where idActividad = idact and idDeportista = iddep;
-$$
-Language sql;
-
-
---Buscar actividad por nombre
-create or replace function buscarActividadNombre (nombre varchar) returns actividad
-as
-$$
-Select * from actividad
-where Upper(nombreActividad) = Upper(nombre);
 $$
 Language sql;
 
@@ -571,6 +588,17 @@ $$
 Delete from solicitudesCarrera where idcarrera = idcarr and idusuario = iduser and categoriaCarrera = catCarr;
 $$
 Language sql;
+
+
+--Funcion para ver solicitudes de una carrera por id
+create or replace function buscarSolicitudesCarrera(idcar integer) returns solicitudesCarrera
+as
+$$
+select * from solicitudesCarrera where idCarrera = idcar;
+$$
+Language sql;
+
+
 --Agregar un usuario a una carrera por su id, el id de la carrera y la categoria de la carrera en al que va a participar
 create or replace function agregarUsuarioCarrera (iddep integer, idcarr integer, catCarr varchar) returns void
 as
@@ -598,18 +626,6 @@ Delete from usuariosCarrera where iddeportista = iddep and idcarrera = idcarr;
 $$
 Language sql;
 
---Crear un nuevo reto
-create or replace function crearReto (
-	idorga int, nombreto varchar,obj varchar, fechainc timestamp, fechafin timestamp, tipoact varchar,
-	tiporet varchar, privacidad boolean) 
-	returns void
-	as
-	$$
-	insert into Reto (idorganizador, nombreReto, objetivoReto, fechainicio, fechafinaliza, tipoactividad,
-					  tiporeto, privada) 
-	values (idorga, nombreto, obj, fechainc, fechafin, tipoact, tiporet, privacidad);
-	$$
-Language sql;
 
 --Actualizar datos de un usuario en una carrera
 create or replace function actualizarDatosCarreraUsuario 
@@ -627,11 +643,11 @@ Language sql;
 --Ver las carreras de todos los usuario
 create or replace function CarrerasUsuarios () returns table (
 	idusuario int, primernombre varchar, apellidos varchar, categoria varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-	fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
+	fechacarrera timestamp, costo integer, cuenta varchar, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 Select d.idusuario, d.primernombre, d.apellidos, uc.categoriaCompite,uc.idcarrera, carr.nombrecarrera, carr.tipoactividad, carr.fechacarrera,
-		uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
+		carr.costo, carr.cuentabancaria, uc.kilometraje, uc.altura, uc.tiempoRegistrado,uc.completitud, uc.recorrido
 from usuario d
 inner join usuariosCarrera as uc
 	on d.idusuario = uc.iddeportista
@@ -662,7 +678,7 @@ Language sql;
 --Ver carreras por ID del usuario
 create or replace function buscarCarrerasPorUsuaio (iduser integer)
 returns table (idusuario int, primernombre varchar, apellidos varchar, categoriaCompite varchar, idcarrera int, nombrecarrera varchar, tipoactividad varchar,
-				fechacarrera timestamp, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
+fechacarrera timestamp, costo integer, cuenta varchar, kilometraje varchar, altura varchar, duracion varchar, completitud boolean, recorrido varchar)
 as
 $$
 select * from carrerasUsuarios() 
@@ -838,6 +854,7 @@ inner join usuariosReto as ur
 		order by ret.fechainicio desc
 $$
 Language sql;
+
 
 -- Ver retos de los amigos del deportista
 create or replace function retosAmigos (iduser int)

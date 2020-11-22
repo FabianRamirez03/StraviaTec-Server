@@ -103,8 +103,8 @@ namespace APIStraviaTec.Controllers
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, carrera.Idcarrera);
             command.Parameters.AddWithValue("@idorg", NpgsqlTypes.NpgsqlDbType.Integer, carrera.Idorganizador);
-            command.Parameters.AddWithValue("@nomcarr", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Nombrecarrera);
-            command.Parameters.AddWithValue("@fechcarr", NpgsqlTypes.NpgsqlDbType.Timestamp, carrera.Fechacarrera);
+            command.Parameters.AddWithValue("@nomcarr", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Idcarrera);
+            command.Parameters.AddWithValue("@fechcarr", NpgsqlTypes.NpgsqlDbType.Timestamp, carrera.Idorganizador);
             command.Parameters.AddWithValue("@tipact", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Tipoactividad);
             command.Parameters.AddWithValue("@ruta", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Recorrido);
             command.Parameters.AddWithValue("@privacidad", NpgsqlTypes.NpgsqlDbType.Boolean, carrera.Privada);
@@ -112,7 +112,6 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@cuenta", NpgsqlTypes.NpgsqlDbType.Varchar, carrera.Cuentabancaria);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
-            Debug.WriteLine("Carrera Modificada");
             conn.Close();
             return;
         }

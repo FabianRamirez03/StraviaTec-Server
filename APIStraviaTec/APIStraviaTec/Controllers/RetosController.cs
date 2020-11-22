@@ -82,10 +82,61 @@ namespace APIStraviaTec.Controllers
             return retornar;
         }
 
+        [Route("patrocinador")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> patrocinador([FromBody] Usuario usuario)
+        {
+            List<Object> CarrerasUser = new List<Object>();
+            Usuarioscarrera usuarioCarrera = new Usuarioscarrera();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarPatrocinadoresReto", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idret", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombrePatrocinador=dr[0].ToString(),
+                            representante = dr[1].ToString(),
+                            logo = dr[2].ToString(),
+                            telefono = dr[3].ToString()
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    CarrerasUser.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Usuario no encontrado");
+
+            }
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < CarrerasUser.Count; x++)
+            {
+                var tempList = (IList<object>)CarrerasUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
         [Route("retosDisponibles")]
         [EnableCors("AnotherPolicy")]
         [HttpPost]
-        public List<Object> retosDisponibles([FromBody] Usuario usuario)
+        public List<Object> retosDisponibles([FromBody] Reto usuario)
         {
             List<Object> RetosUser = new List<Object>();
             //Connect to a PostgreSQL database
@@ -94,7 +145,7 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("retosDisponibles", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
+            command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idreto);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();
 

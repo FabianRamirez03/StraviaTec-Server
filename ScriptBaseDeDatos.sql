@@ -13,9 +13,8 @@ create table usuario(
 	foto text default '',
 	edad integer default 0,
 	categoria text default '',
-	administrador integer default 1;
-);
-
+	administrador integer default 1
+); 
 
 create table AmigosUsuario(
 	idDeportista int not null,
@@ -168,7 +167,7 @@ create table PatrocinadoresCarrera(
 --Tabla usuario
 alter table usuario
 add constraint UQ_nombreUsuario
-unique (NombreUsuario)
+unique (NombreUsuario);
 
 
 --Tabla Grupo
@@ -186,10 +185,6 @@ alter table Carrera
 add constraint FK_organizadorCarrera
 foreign key (idOrganizador) references usuario (idUsuario);
 
-alter table Carrera
-add constraint UQ_nombreCarrera
-unique (nombreCarrera);
-
 
 --Tabla Reto
 alter table Reto
@@ -198,5 +193,5 @@ foreign key (idOrganizador) references usuario (idUsuario);
 
 alter table Reto
 add constraint UQ_nombreUnico
-unique(nombreReto)
+unique(nombreReto);
 

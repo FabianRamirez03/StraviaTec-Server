@@ -7,7 +7,8 @@ namespace APIStraviaTec.Models
     {
         public int Idactividad { get; set; }
         public string Nombreactividad { get; set; }
-        public string Tipoactividad { get; set; }
+        public int Iddeportista { get; set; }
         public DateTime? Fecha { get; set; }
+        public string Tipoactividad { get; set; }
     }
 }

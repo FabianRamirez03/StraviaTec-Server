@@ -1,0 +1,16 @@
+
+APIStraviaTec/.vs/APIStraviaTec/v16/
+
+*.v2
+
+APIStraviaTec/APIStraviaTec/bin/Debug/netcoreapp3.1/APIStraviaTec.dll
+
+APIStraviaTec/APIStraviaTec/bin/Debug/netcoreapp3.1/APIStraviaTec.pdb
+
+APIStraviaTec/APIStraviaTec/bin/Debug/netcoreapp3.1/web.config
+
+APIStraviaTec/APIStraviaTec/obj/Debug/netcoreapp3.1/APIStraviaTec.csprojAssemblyReference.cache
+
+APIStraviaTec/APIStraviaTec/obj/Debug/netcoreapp3.1/APIStraviaTec.dll
+
+APIStraviaTec/APIStraviaTec/obj/Debug/netcoreapp3.1/APIStraviaTec.pdb

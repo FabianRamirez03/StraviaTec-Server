@@ -6,6 +6,6 @@ namespace APIStraviaTec.Models
     public partial class Usuariosporgrupo
     {
         public int Idusuario { get; set; }
-        public string Nombregrupo { get; set; }
+        public int Idgrupo { get; set; }
     }
 }

@@ -18,6 +18,12 @@ namespace APIStraviaTec
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+           
+        }
+
+        public static string getKey()
+        {
+            return "Server=127.0.0.1;User Id=postgres; " + "Password=password;Database=basedatosstraviatec;";
         }
 
         public IConfiguration Configuration { get; }
@@ -25,6 +31,16 @@ namespace APIStraviaTec
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnotherPolicy",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200/")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
+                    });
+            });
             services.AddControllers();
         }
 
@@ -37,8 +53,10 @@ namespace APIStraviaTec
             }
 
             app.UseHttpsRedirection();
-
+            app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
@@ -47,5 +65,6 @@ namespace APIStraviaTec
                 endpoints.MapControllers();
             });
         }
+
     }
 }

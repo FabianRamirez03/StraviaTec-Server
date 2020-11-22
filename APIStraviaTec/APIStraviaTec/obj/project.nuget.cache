@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "oR3z3NdTJKUmdPub8ZaDOpPEWj48fmzPCSSlfZLpBiWA7kp84lN6ADmmvbYORqSJpk3obBGcSg3UOga/e34uNA==",
+  "dgSpecHash": "OSn2DwlmJdKAPImANbcsE96xrctq4DSRWgE93BQ+08OXwOou7oNJdWVzQDDCs5SBOVZ1fqI6WBPHWr+jNnPk4w==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mario\\Desktop\\StraviaTec-Server\\APIStraviaTec\\APIStraviaTec\\APIStraviaTec.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Mario\\.nuget\\packages\\entityframework\\6.2.0\\entityframework.6.2.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.csharp\\4.6.0\\microsoft.csharp.4.6.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.data.sqlclient\\1.0.19249.1\\microsoft.data.sqlclient.1.0.19249.1.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.entityframeworkcore\\3.0.0\\microsoft.entityframeworkcore.3.0.0.nupkg.sha512",
@@ -28,6 +29,7 @@
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\microsoft.win32.registry\\4.5.0\\microsoft.win32.registry.4.5.0.nupkg.sha512",
+    "C:\\Users\\Mario\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\npgsql\\4.1.0\\npgsql.4.1.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\3.0.0\\npgsql.entityframeworkcore.postgresql.3.0.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
@@ -93,5 +95,16 @@
     "C:\\Users\\Mario\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512",
     "C:\\Users\\Mario\\.nuget\\packages\\system.xml.xmlserializer\\4.3.0\\system.xml.xmlserializer.4.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "El paquete \"EntityFramework 6.2.0\" se restauró con \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8\" en lugar de la plataforma de destino del proyecto \".NETCoreApp,Version=v3.1\". Puede que el paquete no sea totalmente compatible con el proyecto.",
+      "libraryId": "EntityFramework",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.1"
+      ]
+    }
+  ]
 }

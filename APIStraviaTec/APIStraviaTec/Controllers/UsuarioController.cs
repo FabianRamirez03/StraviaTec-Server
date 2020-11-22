@@ -215,7 +215,7 @@ namespace APIStraviaTec.Controllers
             command.Parameters.AddWithValue("@apellido", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Apellidos);
             command.Parameters.AddWithValue("@nacimiento", NpgsqlTypes.NpgsqlDbType.Date, usuario.Fechanacimiento);
             command.Parameters.AddWithValue("@pais", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Nacionalidad);
-            command.Parameters.AddWithValue("@imagen", NpgsqlTypes.NpgsqlDbType.Bytea, usuario.Foto);
+            command.Parameters.AddWithValue("@imagen", NpgsqlTypes.NpgsqlDbType.Varchar, usuario.Foto);
             // Execute the query and obtain a result set
             command.ExecuteNonQuery();
             Debug.WriteLine("Usuario creado exitosamente");

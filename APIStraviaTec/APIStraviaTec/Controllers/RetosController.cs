@@ -31,6 +31,7 @@ namespace APIStraviaTec.Controllers
             // Define a query returning a single row result set 
             NpgsqlCommand command = new NpgsqlCommand("retosPorUsuario", conn);
             command.CommandType = System.Data.CommandType.StoredProcedure;
+            Debug.WriteLine(usuario.Idusuario);
             command.Parameters.AddWithValue("@iduser", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idusuario);
             // Execute the query and obtain a result set
             NpgsqlDataReader dr = command.ExecuteReader();

@@ -277,6 +277,57 @@ namespace APIStraviaTec.Controllers
             return retornar;
         }
 
+        [Route("patrocinador")]
+        [EnableCors("AnotherPolicy")]
+        [HttpPost]
+        public List<Object> patrocinador([FromBody] Carrera usuario)
+        {
+            List<Object> CarrerasUser = new List<Object>();
+            Usuarioscarrera usuarioCarrera = new Usuarioscarrera();
+            //Connect to a PostgreSQL database
+            NpgsqlConnection conn = new NpgsqlConnection(serverKey);
+            conn.Open();
+            // Define a query returning a single row result set 
+            NpgsqlCommand command = new NpgsqlCommand("buscarPatrocinadoresCarrera", conn);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@idcarr", NpgsqlTypes.NpgsqlDbType.Integer, usuario.Idcarrera);
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = command.ExecuteReader();
+            try
+            {
+                while (dr.Read())
+                {
+                    var jsons = new[]
+                    {
+                        new {
+                            nombrePatrocinador=dr[0].ToString(),
+                            representante = dr[1].ToString(),
+                            logo = dr[2].ToString(),
+                            telefono = dr[3].ToString()
+                        }
+
+                     };
+                    Console.WriteLine(jsons);
+                    CarrerasUser.Add(jsons);
+
+
+                }
+
+            }
+            catch
+            {
+                Debug.WriteLine("Usuario no encontrado");
+
+            }
+            List<object> retornar = new List<object>();
+            for (var x = 0; x < CarrerasUser.Count; x++)
+            {
+                var tempList = (IList<object>)CarrerasUser[x];
+                retornar.Add(tempList[0]);
+            }
+            return retornar;
+        }
+
 
         [Route("carrerasDisponbles")]
         [EnableCors("AnotherPolicy")]
